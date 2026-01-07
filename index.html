@@ -17,10 +17,10 @@
     <style>
         /* --- Reset y Fuentes --- */
         html, body {
-            overflow-x: hidden; /* CRÍTICO: Evita scroll lateral fantasma */
+            overflow-x: hidden;
             width: 100%;
             position: relative;
-            touch-action: manipulation; /* Mejora respuesta táctil */
+            touch-action: manipulation;
         }
         body { font-family: 'Fredoka', sans-serif; }
         h1, h2, h3, h4, .font-oswald { font-family: 'Oswald', sans-serif; }
@@ -34,7 +34,6 @@
         }
 
         /* --- Animaciones Suavizadas --- */
-        /* Ajustado para no exceder escala 1.0 y evitar desbordamiento lateral */
         @keyframes bounce-in {
             0% { transform: scale(0.9); opacity: 0; }
             70% { transform: scale(1.02); } 
@@ -42,35 +41,32 @@
         }
         .animate-pop { animation: bounce-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
+        /* Animación para la barra inferior */
+        .slide-up { animation: slideUp 0.3s ease-out forwards; }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
         /* --- Estilos personalizados --- */
-        .pizza-card:active { transform: scale(0.98); } /* Feedback táctil en móvil */
+        .pizza-card:active { transform: scale(0.98); } 
         
         .custom-input:focus {
             box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
             border-color: #dc2626;
         }
 
-        /* Scrollbar para el carrito */
+        /* Scrollbar */
         .cart-scroll::-webkit-scrollbar { width: 4px; }
         .cart-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
         .cart-scroll::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 10px; }
         
-        /* Toast Notification */
-        .toast {
-            transition: all 0.3s ease;
-            z-index: 100;
-        }
-        
-        /* Utilerías */
+        .toast { transition: all 0.3s ease; z-index: 100; }
         .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        .disabled-section { 
-            opacity: 0.5; 
-            pointer-events: none; 
-            filter: grayscale(100%); 
-        }
+        .disabled-section { opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
     </style>
 </head>
-<body class="text-gray-800 antialiased pb-24 min-h-[100dvh]">
+<body class="text-gray-800 antialiased pb-32 min-h-[100dvh]"> <!-- pb-32 para dar espacio a la barra flotante -->
 
     <!-- Configuración del Negocio -->
     <script>
@@ -78,7 +74,7 @@
     </script>
 
     <!-- HEADER -->
-    <header class="bg-gradient-to-r from-red-700 to-orange-600 text-white shadow-xl sticky top-0 z-50 border-b-4 border-yellow-400 w-full">
+    <header class="bg-gradient-to-r from-red-700 to-orange-600 text-white shadow-xl sticky top-0 z-40 border-b-4 border-yellow-400 w-full">
         <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
             <!-- Logo -->
             <div class="flex items-center gap-3">
@@ -109,12 +105,12 @@
         </div>
     </header>
 
-    <!-- CONTENEDOR DE NOTIFICACIONES -->
+    <!-- NOTIFICACIONES -->
     <div id="notification-container" class="fixed top-24 left-1/2 transform -translate-x-1/2 z-[60] pointer-events-none w-full max-w-sm flex flex-col items-center gap-2 px-4"></div>
 
     <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-8 md:space-y-12 overflow-x-hidden">
         
-        <!-- HERO BANNER (Promo Principal) -->
+        <!-- HERO BANNER -->
         <div class="bg-gray-900 rounded-3xl p-6 md:p-12 text-center shadow-2xl relative overflow-hidden animate-pop border-4 border-yellow-500 group mx-auto w-full">
             <div class="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1590947132387-155cc02f3212?q=80&w=1600&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay group-hover:scale-105 transition-transform duration-1000"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
@@ -133,9 +129,8 @@
             </div>
         </div>
 
-        <!-- SECCIÓN 1: ARMA TU PROMO (El Builder) -->
+        <!-- SECCIÓN 1: ARMA TU PROMO -->
         <div id="builder-section" class="bg-white p-4 md:p-8 rounded-3xl shadow-xl border border-gray-100 relative">
-            <!-- Etiqueta Decorativa -->
             <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-1.5 rounded-full font-bold shadow-lg border-2 border-white flex items-center gap-2 text-xs md:text-sm whitespace-nowrap z-10">
                 <i class="fas fa-tools"></i> ARMA TU 2x1
             </div>
@@ -147,33 +142,10 @@
                     Elige el Tamaño <span class="text-xs text-gray-500 font-normal ml-auto">(Precio por 2)</span>
                 </h4>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="sizes-container">
-                    <!-- Se llena con JS -->
-                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="sizes-container"></div>
             </section>
 
-            <!-- BARRA DE ESTADO (Sticky) -->
-            <!-- Ajustado top-16 para que no choque con el header -->
-            <div id="status-bar" class="hidden sticky top-20 z-40 bg-white/95 backdrop-blur-md shadow-lg border border-red-100 p-3 md:p-4 rounded-xl mb-8 transform transition-all duration-300 ring-1 ring-red-50 mx-[-0.5rem] md:mx-0">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-3">
-                    <div class="text-center md:text-left w-full md:w-auto flex justify-between md:block items-center">
-                        <div class="text-[10px] text-red-500 font-bold uppercase tracking-widest text-left">Estás armando:</div>
-                        <div class="font-bold text-gray-800 text-lg md:text-2xl font-oswald text-right md:text-left" id="status-size-label">Promo Grande</div>
-                    </div>
-                    
-                    <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-                        <div class="flex gap-2 w-full justify-center" id="status-slots">
-                            <!-- Slots de selección -->
-                        </div>
-                        
-                        <button id="btn-add-promo" onclick="addPromoToCart()" class="hidden w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg animate-pulse transition transform hover:scale-105 items-center justify-center gap-2 text-sm uppercase">
-                            <i class="fas fa-check-circle text-lg"></i> Agregar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PASO 2: PIZZAS (Sabores) -->
+            <!-- PASO 2: PIZZAS -->
             <section id="pizzas-section" class="disabled-section transition-all duration-500">
                 <h4 class="text-xl md:text-2xl font-bold text-gray-800 mb-4 flex items-center gap-3 border-b pb-2">
                     <span class="bg-gray-800 text-white w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full text-xs md:text-sm shrink-0">2</span>
@@ -181,29 +153,23 @@
                     <span class="text-xs text-gray-500 font-normal ml-auto hidden md:inline">(Toca para seleccionar)</span>
                 </h4>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="pizzas-container">
-                    <!-- Se llena con JS -->
-                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="pizzas-container"></div>
             </section>
         </div>
 
-        <!-- SECCIÓN 2: PAQUETES FAMILIARES -->
+        <!-- SECCIÓN 2: PAQUETES -->
         <div class="bg-white p-4 md:p-8 rounded-3xl shadow-xl border border-gray-100 relative overflow-hidden">
             <div class="absolute top-0 right-0 bg-yellow-400 text-red-900 font-bold px-10 py-1 transform rotate-45 translate-x-10 translate-y-5 shadow-sm z-10 text-[10px] md:text-xs tracking-widest uppercase">Ofertas</div>
-            
             <div class="flex items-center gap-3 mb-6">
                 <div class="bg-orange-100 text-orange-600 p-2 md:p-3 rounded-xl">
                     <i class="fas fa-box-open text-xl md:text-2xl"></i>
                 </div>
                 <h3 class="text-2xl md:text-3xl font-bold text-gray-800 font-oswald uppercase">Paquetes</h3>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6" id="packages-container">
-                <!-- Se llena con JS -->
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6" id="packages-container"></div>
         </div>
 
-        <!-- SECCIÓN 3: EXTRAS Y BEBIDAS -->
+        <!-- SECCIÓN 3: EXTRAS -->
         <div class="bg-white p-4 md:p-8 rounded-3xl shadow-xl border border-gray-100">
             <div class="flex items-center gap-3 mb-6">
                 <div class="bg-blue-100 text-blue-600 p-2 md:p-3 rounded-xl">
@@ -211,10 +177,7 @@
                 </div>
                 <h3 class="text-2xl md:text-3xl font-bold text-gray-800 font-oswald uppercase">Bebidas y Extras</h3>
             </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="extras-container">
-                <!-- Se llena con JS -->
-            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="extras-container"></div>
         </div>
 
         <!-- INFO PAGOS -->
@@ -233,42 +196,65 @@
         <p>&copy; 2024 Ramy's Pizza. Todos los derechos reservados.</p>
     </footer>
 
+    <!-- BARRA DE ESTADO FLOTANTE (BOTTOM BAR) -->
+    <!-- Se mantiene fija abajo cuando está activa -->
+    <div id="status-bar" class="hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t-4 border-yellow-400 shadow-[0_-5px_20px_rgba(0,0,0,0.15)] p-4 slide-up rounded-t-2xl">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="text-center md:text-left w-full md:w-auto flex justify-between md:block items-center">
+                <div class="text-[10px] text-red-500 font-bold uppercase tracking-widest text-left">Estás armando:</div>
+                <div class="font-bold text-gray-800 text-lg md:text-2xl font-oswald text-right md:text-left" id="status-size-label">Promo Grande</div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                <div class="flex gap-2 w-full justify-center" id="status-slots">
+                    <!-- Slots de selección -->
+                </div>
+                
+                <button id="btn-add-promo" onclick="addPromoToCart()" class="hidden w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg animate-pulse transition transform hover:scale-105 items-center justify-center gap-2 text-sm uppercase">
+                    <i class="fas fa-check-circle text-lg"></i> AGREGAR AL PEDIDO
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL MENU IMAGEN -->
     <div id="menu-image-modal" class="fixed inset-0 z-[70] bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4 transition-opacity duration-300" onclick="toggleMenuImage()">
         <div class="relative max-w-2xl w-full animate-pop max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
             <button onclick="toggleMenuImage()" class="absolute -top-12 right-0 text-white text-3xl hover:text-red-400 font-bold bg-white/10 w-10 h-10 rounded-full flex items-center justify-center transition">&times;</button>
             <div class="bg-white p-2 rounded-lg shadow-2xl">
-                <!-- Imagen placeholder robusta -->
                 <img src="https://i.ibb.co/6yXH8qL/menu-ramy.jpg" onerror="this.src='https://images.unsplash.com/photo-1574126154517-d1e0d89e7344?auto=format&fit=crop&w=800&q=80'; this.parentElement.innerHTML += '<div class=\'text-center p-4 text-red-500\'>Imagen del menú no disponible, por favor usa el menú digital.</div>'" alt="Menú Ramy's Pizza" class="w-full h-auto rounded">
             </div>
         </div>
     </div>
 
-    <!-- MODAL CARRITO (SIDEBAR) -->
-    <div id="cart-modal" class="fixed inset-0 z-[80] hidden">
-        <!-- Overlay -->
-        <div onclick="toggleCart()" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="cart-overlay"></div>
+    <!-- CARRITO FULL SCREEN (MODAL) -->
+    <div id="cart-modal" class="fixed inset-0 z-[100] hidden bg-white">
         
-        <!-- Panel (Usando 100dvh para móviles) -->
-        <div class="absolute right-0 top-0 h-[100dvh] w-full md:w-[450px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col" id="cart-panel">
+        <!-- Contenedor Flex para layout completo -->
+        <div class="h-full w-full flex flex-col bg-white" id="cart-panel">
             
             <!-- Header Carrito -->
-            <div class="bg-gray-900 p-4 md:p-5 text-white flex justify-between items-center shadow-md z-10 shrink-0">
-                <h2 class="text-xl md:text-2xl font-bold flex items-center gap-2 font-oswald tracking-wide">
-                    <i class="fas fa-receipt text-yellow-400"></i> Tu Pedido
-                </h2>
-                <button onclick="toggleCart()" class="text-white hover:text-red-400 transition bg-white/10 w-8 h-8 rounded-full flex items-center justify-center">
-                    <i class="fas fa-times"></i>
-                </button>
+            <div class="bg-gray-900 p-4 text-white flex justify-between items-center shadow-md z-10 shrink-0">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleCart()" class="text-white hover:text-gray-300 transition w-10 h-10 rounded-full flex items-center justify-center border border-gray-700 bg-gray-800">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2 class="text-xl font-bold flex items-center gap-2 font-oswald tracking-wide">
+                        <i class="fas fa-receipt text-yellow-400"></i> Tu Pedido
+                    </h2>
+                </div>
+                <div class="text-sm font-bold bg-yellow-400 text-gray-900 px-3 py-1 rounded-full">
+                    <span id="cart-count-header">0</span> items
+                </div>
             </div>
 
-            <!-- Lista de Items -->
-            <div class="flex-1 overflow-y-auto p-4 md:p-5 cart-scroll bg-gray-50 touch-pan-y" id="cart-items-container">
+            <!-- Lista de Items (Cuerpo) -->
+            <div class="flex-1 overflow-y-auto p-4 bg-gray-50" id="cart-items-container">
                 <!-- Items del carrito -->
             </div>
 
-            <!-- Footer / Checkout -->
-            <div class="bg-white border-t border-gray-200 p-4 md:p-5 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] z-20 shrink-0" id="cart-footer">
+            <!-- Footer / Checkout (Sticky bottom inside modal) -->
+            <div class="bg-white border-t border-gray-200 p-4 shadow-[0_-5px_30px_rgba(0,0,0,0.1)] z-20 shrink-0" id="cart-footer">
                 
                 <!-- Checkout Form -->
                 <div id="checkout-form" class="hidden space-y-3 mb-4 animate-pop overflow-y-auto max-h-[40vh] pr-1">
@@ -284,12 +270,10 @@
                             <label class="text-xs font-bold text-gray-500 uppercase ml-1">Nombre</label>
                             <input type="text" id="customer-name" placeholder="Tu nombre" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 text-sm custom-input outline-none focus:bg-white">
                         </div>
-                        
                         <div>
                             <label class="text-xs font-bold text-gray-500 uppercase ml-1">Teléfono</label>
                             <input type="tel" id="customer-phone" placeholder="10 dígitos" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 text-sm custom-input outline-none focus:bg-white">
                         </div>
-
                         <div>
                             <label class="text-xs font-bold text-gray-500 uppercase ml-1">Dirección / Ubicación</label>
                             <button onclick="getLocation()" type="button" class="w-full text-xs bg-blue-50 text-blue-600 border border-blue-200 px-3 py-2 rounded-md font-bold mb-2 hover:bg-blue-100 transition flex items-center justify-center gap-2 group">
@@ -300,7 +284,6 @@
                                 <i class="fas fa-check-circle"></i> Coordenadas GPS listas para enviar
                             </div>
                         </div>
-
                         <!-- SECCIÓN DE PAGO -->
                         <div>
                             <label class="text-xs font-bold text-gray-500 uppercase ml-1">Método de Pago</label>
@@ -315,11 +298,7 @@
                                     <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
                                 </div>
                             </div>
-                            
-                            <!-- Caja de Información Dinámica -->
-                            <div id="payment-info" class="mt-2 p-3 rounded-lg text-xs border transition-all duration-300">
-                                <!-- Se llena con JS -->
-                            </div>
+                            <div id="payment-info" class="mt-2 p-3 rounded-lg text-xs border transition-all duration-300"></div>
                         </div>
                     </div>
                 </div>
@@ -530,13 +509,13 @@
                 return;
             }
 
-            // Mostrar barra y habilitar pizzas
+            // Mostrar barra
             bar.classList.remove('hidden');
             document.getElementById('pizzas-section').classList.remove('disabled-section');
             
             sizeLabel.textContent = `Promo ${state.activeSize.label}`;
 
-            // Renderizar slots (Pizza 1 / Pizza 2)
+            // Renderizar slots
             let slotsHtml = '';
             for (let i = 0; i < 2; i++) {
                 const pizza = state.selection[i];
@@ -592,9 +571,7 @@
             const pizza = PIZZAS.find(p => p.id === pizzaId);
             const exists = state.selection.find(p => p.id === pizzaId);
 
-            if (exists) {
-                return; 
-            }
+            if (exists) return; 
 
             if (state.selection.length >= 2) {
                 showToast("⚠️ ¡Ya elegiste tus 2 pizzas! Agrega al carrito.", "warning");
@@ -710,28 +687,16 @@
         // --- CARRITO Y CHECKOUT ---
         function toggleCart(forceOpen = null) {
             const modal = document.getElementById('cart-modal');
-            const overlay = document.getElementById('cart-overlay');
-            const panel = document.getElementById('cart-panel');
             
             const isOpen = !modal.classList.contains('hidden');
             const shouldOpen = forceOpen !== null ? forceOpen : !isOpen;
 
             if (shouldOpen) {
                 modal.classList.remove('hidden');
-                setTimeout(() => {
-                    overlay.classList.remove('opacity-0');
-                    panel.classList.remove('translate-x-full');
-                }, 10);
-                // Bloquear scroll del body
                 document.body.style.overflow = 'hidden';
             } else {
-                overlay.classList.add('opacity-0');
-                panel.classList.add('translate-x-full');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                    // Restaurar scroll del body
-                    document.body.style.overflow = '';
-                }, 300);
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
             }
         }
         
@@ -749,6 +714,7 @@
         function renderCart() {
             const container = document.getElementById('cart-items-container');
             const badge = document.getElementById('cart-count');
+            const badgeHeader = document.getElementById('cart-count-header');
             const totalEl = document.getElementById('cart-total');
             const form = document.getElementById('checkout-form');
             const btnAction = document.getElementById('btn-action-cart');
@@ -757,6 +723,7 @@
             // Badge
             badge.textContent = state.cart.length;
             badge.classList.toggle('scale-0', state.cart.length === 0);
+            if(badgeHeader) badgeHeader.textContent = state.cart.length;
 
             // Total
             const total = state.cart.reduce((sum, item) => sum + item.total, 0);
