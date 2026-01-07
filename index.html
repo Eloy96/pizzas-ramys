@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramy's Pizza | Menú Digital</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- Personalización de Fuentes --- */
+        body { font-family: 'Fredoka', sans-serif; }
+        h1, h2, h3, h4, .font-oswald { font-family: 'Oswald', sans-serif; }
+
+        /* --- Fondo con patrón sutil --- */
+        body {
+            background-color: #fff8f0;
+            background-image: radial-gradient(#ffe4c4 15%, transparent 16%), radial-gradient(#ffe4c4 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+        }
+
+        /* --- Animaciones --- */
+        @keyframes bounce-in {
+            0% { transform: scale(0.8); opacity: 0; }
+            60% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop { animation: bounce-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        /* --- Estilos personalizados --- */
+        .pizza-card:hover { transform: translateY(-4px); }
+        
+        .custom-input:focus {
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+            border-color: #dc2626;
+        }
+
+        /* Scrollbar para el carrito */
+        .cart-scroll::-webkit-scrollbar { width: 6px; }
+        .cart-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .cart-scroll::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 10px; }
+        
+        /* Toast Notification */
+        .toast {
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        /* Utilerías */
+        .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .disabled-section { 
+            opacity: 0.5; 
+            pointer-events: none; 
+            filter: grayscale(100%); 
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased overflow-x-hidden pb-24">
+
+    <!-- Configuración del Negocio -->
+    <script>
+        const BUSINESS_PHONE = "525512906477"; 
+    </script>
+
+    <!-- HEADER -->
+    <header class="bg-gradient-to-r from-red-700 to-orange-600 text-white shadow-xl sticky top-0 z-40 border-b-4 border-yellow-400">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <div class="bg-white text-red-600 w-12 h-12 rounded-full flex items-center justify-center shadow-lg transform rotate-6 border-2 border-yellow-400">
+                    <i class="fas fa-pizza-slice text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold uppercase tracking-wider leading-none text-shadow">Ramy's Pizza</h1>
+                    <p class="text-[10px] md:text-xs text-yellow-300 font-semibold tracking-widest uppercase">El Mirador</p>
+                </div>
+            </div>
+            
+            <!-- Botones Header -->
+            <div class="flex gap-3">
+                <button onclick="toggleMenuImage()" class="hidden md:flex bg-yellow-400 hover:bg-yellow-500 text-red-900 px-4 py-2 rounded-full font-bold shadow-md transition text-sm items-center gap-2 border-b-4 border-yellow-600 active:border-0 active:translate-y-1">
+                    <i class="fas fa-image"></i> Ver Menú
+                </button>
+                <button onclick="toggleMenuImage()" class="md:hidden bg-yellow-400 hover:bg-yellow-500 text-red-900 w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-md transition border-b-4 border-yellow-600 active:border-0 active:translate-y-1">
+                    <i class="fas fa-image"></i>
+                </button>
+
+                <button onclick="toggleCart()" class="relative group bg-white text-red-700 hover:bg-gray-100 p-2 md:px-4 md:py-2 rounded-full transition-colors duration-300 shadow-inner border-2 border-red-800 flex items-center gap-2">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span class="hidden md:inline font-bold">Pedido</span>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-yellow-400 text-red-900 text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full shadow-md scale-0 transition-transform duration-300 border border-white">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENEDOR DE NOTIFICACIONES -->
+    <div id="notification-container" class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 pointer-events-none w-full max-w-sm flex flex-col items-center gap-2 px-4"></div>
+
+    <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-12">
+        
+        <!-- HERO BANNER (Promo Principal) -->
+        <div class="bg-gray-900 rounded-3xl p-8 md:p-12 text-center shadow-2xl relative overflow-hidden animate-pop border-4 border-yellow-500 group">
+            <div class="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1590947132387-155cc02f3212?q=80&w=1600&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay group-hover:scale-105 transition-transform duration-1000"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
+            
+            <div class="relative z-10">
+                <span class="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold uppercase tracking-widest mb-4 inline-block shadow">Oferta Especial</span>
+                <h2 class="text-5xl md:text-7xl font-bold text-yellow-400 mb-2 drop-shadow-[0_4px_4px_rgba(0,0,0,1)] font-oswald italic">¡2x1 TODOS LOS DÍAS!</h2>
+                <p class="text-white text-lg md:text-2xl font-medium drop-shadow-md max-w-2xl mx-auto leading-relaxed">
+                    Elige tu tamaño y combina <span class="text-yellow-400 font-bold">2 mitades diferentes</span>.
+                </p>
+                <div class="mt-6 flex flex-wrap justify-center gap-2">
+                   <a href="#builder-section" class="bg-white text-red-600 px-6 py-3 rounded-full font-bold shadow-lg hover:bg-gray-100 transition transform hover:-translate-y-1">
+                       <i class="fas fa-arrow-down mr-2"></i> Armar Pizza
+                   </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 1: ARMA TU PROMO (El Builder) -->
+        <div id="builder-section" class="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-gray-100 relative">
+            <!-- Etiqueta Decorativa -->
+            <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-8 py-2 rounded-full font-bold shadow-lg border-2 border-white flex items-center gap-2">
+                <i class="fas fa-tools"></i> ARMA TU 2x1
+            </div>
+
+            <!-- PASO 1: TAMAÑOS -->
+            <section class="mb-10 mt-6">
+                <h4 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3 border-b pb-2">
+                    <span class="bg-gray-800 text-white w-8 h-8 flex items-center justify-center rounded-full text-sm">1</span>
+                    Elige el Tamaño
+                </h4>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5" id="sizes-container">
+                    <!-- Se llena con JS -->
+                </div>
+            </section>
+
+            <!-- BARRA DE ESTADO (Sticky) -->
+            <div id="status-bar" class="hidden sticky top-24 z-30 bg-white/95 backdrop-blur-md shadow-lg border border-red-100 p-4 rounded-xl mb-8 transform transition-all duration-300 ring-1 ring-red-50">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="text-center md:text-left">
+                        <div class="text-[10px] text-red-500 font-bold uppercase tracking-widest">Estás armando:</div>
+                        <div class="font-bold text-gray-800 text-2xl font-oswald" id="status-size-label">Promo Grande</div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                        <div class="flex gap-2 w-full justify-center" id="status-slots">
+                            <!-- Slots de selección -->
+                        </div>
+                        
+                        <button id="btn-add-promo" onclick="addPromoToCart()" class="hidden w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg animate-pulse transition transform hover:scale-105 items-center justify-center gap-2 text-sm uppercase">
+                            <i class="fas fa-check-circle text-lg"></i> Agregar al Pedido
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 2: PIZZAS (Sabores) -->
+            <section id="pizzas-section" class="disabled-section transition-all duration-500">
+                <h4 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3 border-b pb-2">
+                    <span class="bg-gray-800 text-white w-8 h-8 flex items-center justify-center rounded-full text-sm">2</span>
+                    Escoge 2 Mitades
+                    <span class="text-sm font-normal text-gray-500 ml-auto">(Toca para seleccionar)</span>
+                </h4>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="pizzas-container">
+                    <!-- Se llena con JS -->
+                </div>
+            </section>
+        </div>
+
+        <!-- SECCIÓN 2: PAQUETES FAMILIARES -->
+        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-gray-100 relative overflow-hidden">
+            <div class="absolute top-0 right-0 bg-yellow-400 text-red-900 font-bold px-10 py-1 transform rotate-45 translate-x-10 translate-y-5 shadow-sm z-10 text-xs tracking-widest uppercase">Ofertas</div>
+            
+            <div class="flex items-center gap-3 mb-8">
+                <div class="bg-orange-100 text-orange-600 p-3 rounded-xl">
+                    <i class="fas fa-box-open text-2xl"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-gray-800 font-oswald uppercase">Paquetes Familiares</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="packages-container">
+                <!-- Se llena con JS -->
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: EXTRAS Y BEBIDAS -->
+        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-gray-100">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="bg-blue-100 text-blue-600 p-3 rounded-xl">
+                    <i class="fas fa-wine-bottle text-2xl"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-gray-800 font-oswald uppercase">Bebidas y Extras</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="extras-container">
+                <!-- Se llena con JS -->
+            </div>
+        </div>
+
+        <!-- INFO PAGOS -->
+        <div class="bg-gray-800 text-gray-300 p-6 rounded-2xl text-center text-sm space-y-2 border border-gray-700">
+            <p><i class="fas fa-credit-card mr-2 text-yellow-400"></i> Aceptamos Pagos con Tarjeta y Clip</p>
+            <p><i class="fas fa-exchange-alt mr-2 text-yellow-400"></i> Transferencias BBVA Disponibles</p>
+            <p class="text-yellow-400 font-bold mt-2 pt-2 border-t border-gray-700 inline-block">
+                <i class="fas fa-exclamation-triangle mr-1"></i> El repartidor no lleva más de $100 de cambio
+            </p>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-black text-gray-500 text-center py-8 text-xs">
+        <p>&copy; 2024 Ramy's Pizza. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- MODAL MENU IMAGEN -->
+    <div id="menu-image-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4 transition-opacity duration-300" onclick="toggleMenuImage()">
+        <div class="relative max-w-2xl w-full animate-pop" onclick="event.stopPropagation()">
+            <button onclick="toggleMenuImage()" class="absolute -top-12 right-0 text-white text-3xl hover:text-red-400 font-bold bg-white/10 w-10 h-10 rounded-full flex items-center justify-center transition">&times;</button>
+            <div class="bg-white p-2 rounded-lg shadow-2xl overflow-hidden">
+                <!-- Imagen placeholder robusta -->
+                <img src="https://i.ibb.co/6yXH8qL/menu-ramy.jpg" onerror="this.src='https://images.unsplash.com/photo-1574126154517-d1e0d89e7344?auto=format&fit=crop&w=800&q=80'; this.parentElement.innerHTML += '<div class=\'text-center p-4 text-red-500\'>Imagen del menú no disponible, por favor usa el menú digital.</div>'" alt="Menú Ramy's Pizza" class="w-full h-auto rounded">
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CARRITO (SIDEBAR) -->
+    <div id="cart-modal" class="fixed inset-0 z-50 hidden">
+        <!-- Overlay -->
+        <div onclick="toggleCart()" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="cart-overlay"></div>
+        
+        <!-- Panel -->
+        <div class="absolute right-0 top-0 h-full w-full md:w-[450px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col" id="cart-panel">
+            
+            <!-- Header Carrito -->
+            <div class="bg-gray-900 p-5 text-white flex justify-between items-center shadow-md z-10">
+                <h2 class="text-2xl font-bold flex items-center gap-2 font-oswald tracking-wide">
+                    <i class="fas fa-receipt text-yellow-400"></i> Tu Pedido
+                </h2>
+                <button onclick="toggleCart()" class="text-white hover:text-red-400 transition bg-white/10 w-8 h-8 rounded-full flex items-center justify-center">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Lista de Items -->
+            <div class="flex-1 overflow-y-auto p-5 cart-scroll bg-gray-50" id="cart-items-container">
+                <!-- Items del carrito -->
+            </div>
+
+            <!-- Footer / Checkout -->
+            <div class="bg-white border-t border-gray-200 p-5 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] z-20" id="cart-footer">
+                
+                <!-- Checkout Form -->
+                <div id="checkout-form" class="hidden space-y-4 mb-4 animate-pop">
+                    <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg">
+                        <h3 class="font-bold text-yellow-800 text-sm mb-1 flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt"></i> Datos de Entrega
+                        </h3>
+                        <p class="text-xs text-yellow-700">Verifica que tu ubicación sea correcta.</p>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase ml-1">Nombre</label>
+                            <input type="text" id="customer-name" placeholder="Tu nombre" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 text-sm custom-input outline-none focus:bg-white">
+                        </div>
+                        
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase ml-1">Teléfono</label>
+                            <input type="tel" id="customer-phone" placeholder="10 dígitos" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 text-sm custom-input outline-none focus:bg-white">
+                        </div>
+
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase ml-1">Dirección / Ubicación</label>
+                            <button onclick="getLocation()" type="button" class="w-full text-xs bg-blue-50 text-blue-600 border border-blue-200 px-3 py-2 rounded-md font-bold mb-2 hover:bg-blue-100 transition flex items-center justify-center gap-2 group">
+                                <i class="fas fa-location-arrow group-hover:animate-bounce"></i> Usar mi ubicación GPS actual
+                            </button>
+                            <textarea id="customer-address" rows="2" placeholder="Calle, Número, Colonia y Referencias..." class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 text-sm custom-input outline-none resize-none focus:bg-white"></textarea>
+                            <div id="location-success" class="hidden text-xs text-green-700 mt-2 font-bold flex items-center gap-2 bg-green-100 p-2 rounded border border-green-200">
+                                <i class="fas fa-check-circle"></i> Coordenadas GPS listas para enviar
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Totales y Botones -->
+                <div class="flex justify-between items-end mb-4 border-t border-dashed border-gray-300 pt-4">
+                    <span class="text-gray-600 font-medium text-sm uppercase">Total a Pagar</span>
+                    <span class="text-4xl font-bold text-red-600 font-oswald tracking-tight" id="cart-total">$0</span>
+                </div>
+                
+                <button id="btn-action-cart" onclick="proceedToCheckout()" class="w-full bg-gray-900 hover:bg-gray-800 text-white py-4 rounded-xl font-bold text-lg shadow-lg transition transform active:scale-95 flex justify-center items-center gap-3">
+                    CONTINUAR <i class="fas fa-arrow-right"></i>
+                </button>
+                
+                <button id="btn-back-cart" onclick="backToCart()" class="hidden w-full mt-3 text-gray-400 hover:text-gray-600 text-sm font-bold py-2 transition">
+                    Volver al pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LÓGICA JAVASCRIPT -->
+    <script>
+        // --- DATOS DEL NEGOCIO ---
+        const SIZES = [
+            { id: 'mediana', label: 'Mediana', slices: '8 rebanadas', price: 230, iconSize: 'text-3xl' },
+            { id: 'grande', label: 'Grande', slices: '12 rebanadas', price: 265, iconSize: 'text-4xl' },
+            { id: 'familiar', label: 'Familiar', slices: '16 rebanadas', price: 300, iconSize: 'text-5xl' },
+        ];
+
+        const TYPE_CLASSIC = "Clásica";
+        const TYPE_SPECIAL = "Especialidad";
+
+        const PIZZAS = [
+            { id: 1, name: "Hawaiana", ingredients: "Jamón y Piña.", img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&auto=format&fit=crop", type: TYPE_CLASSIC },
+            { id: 2, name: "Pepperoni", ingredients: "Doble Pepperoni.", img: "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=500&auto=format&fit=crop", type: TYPE_CLASSIC },
+            { id: 3, name: "Ramy's Especial", ingredients: "Pimiento, Cebolla, Champiñón, Atún, Mayonesa y Aguacate.", img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 4, name: "Sambar", ingredients: "Pierna, Pollo, Salchicha y Salsa Chipotle.", img: "https://images.unsplash.com/photo-1593560708920-63984dc36f3c?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 5, name: "Mexicana", ingredients: "Pierna, Pollo, Jalapeño y Aguacate.", img: "https://images.unsplash.com/photo-1620374645498-af620e40d44b?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 6, name: "Ranchera", ingredients: "Frijol, Champiñón, Chorizo, Jalapeño.", img: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 7, name: "Italiana", ingredients: "Carne Molida y Salchicha.", img: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=500&auto=format&fit=crop", type: TYPE_CLASSIC },
+            { id: 8, name: "Mirta", ingredients: "Pierna, Jamón, Pepperoni y Pimiento.", img: "https://images.unsplash.com/photo-1576458088443-04a19bb13da6?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 9, name: "Cubana", ingredients: "Pierna, Jamón, Jalapeño y Aguacate.", img: "https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 10, name: "Azteca", ingredients: "Frijol, Champiñón, Tocino, Cebolla.", img: "https://images.unsplash.com/photo-1574126154517-d1e0d89e7344?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 11, name: "Especial", ingredients: "Jamón, Piña, Pepperoni y Jalapeños.", img: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 12, name: "BBQ Pollo", ingredients: "Pechuga de Pollo en Salsa BBQ.", img: "https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 13, name: "Combinada", ingredients: "Jamón, Chorizo, Pimiento y Cebolla.", img: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=500&auto=format&fit=crop", type: TYPE_CLASSIC },
+            { id: 14, name: "Carnes Frías", ingredients: "Pierna, Salchicha, Chorizo, Jamón y Pepperoni.", img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 15, name: "Vegetariana", ingredients: "Champiñón, Cebolla, Pimiento y Aguacate.", img: "https://images.unsplash.com/photo-1511688878353-3a2f5be94c74?w=500&auto=format&fit=crop", type: TYPE_CLASSIC },
+            { id: 16, name: "Pastor", ingredients: "Carne al Pastor y Piña.", img: "https://images.unsplash.com/photo-1506354666786-959d6d497f1a?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 17, name: "Tres Quesos", ingredients: "Mezcla de Tres Quesos.", img: "https://images.unsplash.com/photo-1573821663912-569905455b1c?w=500&auto=format&fit=crop", type: TYPE_CLASSIC }
+        ];
+
+        const PACKAGES = [
+            { id: 'p1', name: "Paquete 1", desc: "3 Pizzas Familiares Hawaianas + 1 Refresco 2 Lts.", price: 415, icon: 'fas fa-users' },
+            { id: 'p2', name: "Paquete 2", desc: "3 Pizzas Grandes Hawaianas + 1 Refresco 2 Lts.", price: 355, icon: 'fas fa-user-friends' },
+            { id: 'p3', name: "Paquete 3", desc: "1 Pizza Familiar Orilla Queso (Espec.) + Refresco 2 Lts.", price: 220, icon: 'fas fa-star' },
+            { id: 'p4', name: "Paquete 4", desc: "2 Pizzas Familiares Hawaianas + 1 Refresco 2 Lts.", price: 290, icon: 'fas fa-user-plus' },
+            { id: 'p5', name: "Paquete 5", desc: "2 Pizzas Grandes Hawaianas + 1 Refresco 2 Lts.", price: 250, icon: 'fas fa-pizza-slice' },
+            { id: 'promo', name: "Promo Mostrador", desc: "1 Pizza Grande (Hawaiana o Pepperoni). *Solo Recoger", price: 120, icon: 'fas fa-store' }
+        ];
+
+        const EXTRAS = [
+            { id: 'refresco', name: "Refresco 2 Lts", desc: "Coca-Cola family products", price: 20, icon: 'fas fa-bottle-water' },
+            { id: 'spaghetti-jamon', name: "Spaghetti Jamón", desc: "Porción individual", price: 65, icon: 'fas fa-utensils' },
+            { id: 'spaghetti-champ', name: "Spaghetti Champiñones", desc: "Porción individual", price: 65, icon: 'fas fa-utensils' },
+            { id: 'spaghetti-bol', name: "Spaghetti Boloñesa", desc: "Con Jamón y Boloñesa", price: 65, icon: 'fas fa-utensils' },
+            { id: 'antipasto', name: "Antipasto", desc: "Con Champiñones", price: 65, icon: 'fas fa-leaf' },
+            { id: 'ingrediente', name: "Ingrediente Extra", desc: "Añadir a una pizza", price: 15, icon: 'fas fa-plus' },
+        ];
+
+        // --- ESTADO DE LA APLICACIÓN ---
+        let state = {
+            activeSize: null,
+            selection: [],
+            cart: [],
+            isCheckoutMode: false,
+            locationUrl: ''
+        };
+
+        // --- INICIALIZACIÓN ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSizes();
+            renderPizzas();
+            renderPackages();
+            renderExtras();
+            renderCart();
+        });
+
+        // --- RENDERIZADORES ---
+        function renderSizes() {
+            const container = document.getElementById('sizes-container');
+            container.innerHTML = SIZES.map(size => `
+                <div onclick="selectSize('${size.id}')" 
+                     class="cursor-pointer relative overflow-hidden bg-white rounded-2xl shadow-sm border-2 transition-all duration-300 group hover:shadow-lg transform active:scale-95 ${state.activeSize?.id === size.id ? 'border-red-600 bg-red-50 ring-2 ring-red-100' : 'border-gray-100 hover:border-red-200'}">
+                    <div class="p-4 flex flex-row sm:flex-col items-center justify-between sm:justify-center gap-4">
+                        <div class="text-red-500 transform transition-transform group-hover:rotate-12 ${size.iconSize} bg-red-100 rounded-full w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
+                            <i class="fas fa-pizza-slice"></i>
+                        </div>
+                        <div class="text-left sm:text-center flex-1">
+                            <h4 class="font-bold text-gray-800 text-lg uppercase tracking-wide font-oswald">${size.label}</h4>
+                            <p class="text-xs text-gray-500 mb-1">${size.slices}</p>
+                            <span class="inline-block bg-green-500 text-white px-3 py-1 rounded-full font-bold font-oswald text-lg shadow-sm">$${size.price}</span>
+                        </div>
+                        ${state.activeSize?.id === size.id ? '<div class="absolute top-2 right-2 text-red-600"><i class="fas fa-check-circle text-xl"></i></div>' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPizzas() {
+            const container = document.getElementById('pizzas-container');
+            container.innerHTML = PIZZAS.map(pizza => {
+                const isSelected = state.selection.find(p => p.id === pizza.id);
+                const selectionIndex = state.selection.findIndex(p => p.id === pizza.id);
+                
+                return `
+                <div onclick="togglePizza(${pizza.id})" 
+                     class="pizza-card bg-white rounded-2xl shadow-sm overflow-hidden border-2 cursor-pointer relative group transition-all duration-300 ${isSelected ? 'border-green-500 ring-2 ring-green-100 shadow-md' : 'border-gray-100 hover:border-red-200'}">
+                    
+                    <!-- Imagen -->
+                    <div class="h-32 sm:h-40 overflow-hidden relative">
+                        <img src="${pizza.img}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="${pizza.name}">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                        
+                        <div class="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded shadow-sm uppercase tracking-wider ${pizza.type === TYPE_SPECIAL ? 'bg-purple-100 text-purple-700' : 'bg-orange-100 text-orange-700'}">
+                            ${pizza.type}
+                        </div>
+
+                        <!-- Badge de selección -->
+                        ${isSelected ? `
+                            <div class="absolute inset-0 bg-green-600/60 flex items-center justify-center backdrop-blur-[2px] animate-pop">
+                                <div class="bg-white text-green-600 w-12 h-12 rounded-full flex items-center justify-center shadow-lg font-bold text-2xl border-4 border-green-500">
+                                    ${selectionIndex + 1}
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="absolute bottom-0 left-0 w-full p-3">
+                            <h4 class="font-bold text-white text-lg leading-none drop-shadow-md font-oswald tracking-wide">${pizza.name}</h4>
+                        </div>
+                    </div>
+
+                    <!-- Info -->
+                    <div class="p-4">
+                        <p class="text-xs text-gray-600 leading-snug h-8 overflow-hidden">${pizza.ingredients}</p>
+                        <div class="mt-2 text-right">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase">Click para añadir</span>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function renderPackages() {
+            const container = document.getElementById('packages-container');
+            container.innerHTML = PACKAGES.map(pkg => `
+                <div class="flex flex-col sm:flex-row bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group">
+                    <div class="bg-yellow-400 w-full sm:w-28 flex items-center justify-center p-4 text-red-800 group-hover:bg-yellow-500 transition">
+                        <i class="${pkg.icon} text-4xl"></i>
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-lg font-oswald uppercase">${pkg.name}</h4>
+                            <p class="text-xs text-gray-600 mb-2 leading-relaxed">${pkg.desc}</p>
+                        </div>
+                        <div class="flex justify-between items-center mt-2 border-t pt-2 border-dashed border-gray-200">
+                            <span class="text-2xl font-bold text-red-600 font-oswald">$${pkg.price}</span>
+                            <button onclick="addPackageToCart('${pkg.id}')" class="bg-red-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-red-700 transition shadow-md active:scale-95">
+                                <i class="fas fa-plus mr-1"></i> AGREGAR
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderExtras() {
+            const container = document.getElementById('extras-container');
+            container.innerHTML = EXTRAS.map(extra => `
+                <div class="bg-white border border-gray-100 rounded-xl p-3 shadow-sm hover:shadow-md transition flex items-center justify-between gap-3 group">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-blue-50 text-blue-500 w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-blue-100 transition">
+                            <i class="${extra.icon}"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-gray-800 text-sm leading-tight">${extra.name}</h5>
+                            <div class="text-red-600 font-bold text-sm">$${extra.price}</div>
+                        </div>
+                    </div>
+                    <button onclick="addExtraToCart('${extra.id}')" class="text-gray-300 hover:text-green-500 transition transform active:scale-110">
+                        <i class="fas fa-plus-circle text-3xl"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // --- LOGICA DEL BUILDER 2x1 ---
+        function updateStatusBar() {
+            const bar = document.getElementById('status-bar');
+            const slotsContainer = document.getElementById('status-slots');
+            const btnAdd = document.getElementById('btn-add-promo');
+            const sizeLabel = document.getElementById('status-size-label');
+
+            if (!state.activeSize) {
+                bar.classList.add('hidden');
+                document.getElementById('pizzas-section').classList.add('disabled-section');
+                return;
+            }
+
+            // Mostrar barra y habilitar pizzas
+            bar.classList.remove('hidden');
+            document.getElementById('pizzas-section').classList.remove('disabled-section');
+            
+            sizeLabel.textContent = `Promo ${state.activeSize.label}`;
+
+            // Renderizar slots (Mitad 1 / Mitad 2)
+            let slotsHtml = '';
+            for (let i = 0; i < 2; i++) {
+                const pizza = state.selection[i];
+                if (pizza) {
+                    slotsHtml += `
+                        <div class="bg-green-100 text-green-700 border border-green-300 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm flex items-center animate-pop gap-2">
+                            <i class="fas fa-check-circle"></i> ${pizza.name}
+                        </div>`;
+                } else {
+                    slotsHtml += `
+                        <div class="bg-gray-50 text-gray-400 border border-gray-300 border-dashed px-3 py-1.5 rounded-lg text-xs flex items-center gap-2">
+                            <span class="w-4 h-4 rounded-full bg-gray-200 text-[10px] flex items-center justify-center">${i+1}</span>
+                            Selecciona Mitad ${i + 1}
+                        </div>`;
+                }
+            }
+            slotsContainer.innerHTML = slotsHtml;
+
+            // Mostrar botón si está completo
+            if (state.selection.length === 2) {
+                btnAdd.classList.remove('hidden');
+                btnAdd.classList.add('flex');
+            } else {
+                btnAdd.classList.add('hidden');
+                btnAdd.classList.remove('flex');
+            }
+        }
+
+        function selectSize(sizeId) {
+            if (state.selection.length > 0 && state.activeSize?.id !== sizeId) {
+                if (!confirm("Al cambiar de tamaño se reiniciará tu selección de pizzas. ¿Continuar?")) return;
+            }
+            
+            state.activeSize = SIZES.find(s => s.id === sizeId);
+            state.selection = [];
+            
+            renderSizes();
+            renderPizzas();
+            updateStatusBar();
+            showToast(`Tamaño ${state.activeSize.label} seleccionado`);
+            
+            // Scroll suave a pizzas
+            document.getElementById('pizzas-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function togglePizza(pizzaId) {
+            if (!state.activeSize) {
+                showToast("⚠️ Primero selecciona un tamaño (Paso 1)", "error");
+                document.getElementById('sizes-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            const pizza = PIZZAS.find(p => p.id === pizzaId);
+            const exists = state.selection.find(p => p.id === pizzaId);
+
+            if (exists) {
+                // Opción: permitir deseleccionar
+                // state.selection = state.selection.filter(p => p.id !== pizzaId);
+                return; 
+            }
+
+            if (state.selection.length >= 2) {
+                showToast("⚠️ ¡Ya elegiste 2 mitades! Agrega al carrito.", "warning");
+                // Vibración en móviles si es posible
+                if(navigator.vibrate) navigator.vibrate(200);
+                return;
+            }
+
+            state.selection.push(pizza);
+            renderPizzas();
+            updateStatusBar();
+            
+            if (state.selection.length === 2) {
+                 showToast("¡Promo lista! Agrégala al carrito 👇");
+                 // Scroll suave al botón de agregar
+                 // document.getElementById('status-bar').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function addPromoToCart() {
+            if (state.selection.length !== 2 || !state.activeSize) return;
+
+            const item = {
+                id: Date.now(),
+                type: 'promo',
+                name: `Promo 2x1 ${state.activeSize.label}`,
+                size: state.activeSize,
+                pizzas: [...state.selection],
+                total: state.activeSize.price
+            };
+
+            state.cart.push(item);
+            
+            // Reset selección
+            state.activeSize = null;
+            state.selection = [];
+            
+            renderSizes();
+            renderPizzas();
+            updateStatusBar();
+            renderCart();
+            
+            showToast("✅ Promo agregada al carrito");
+            toggleCart(true); 
+        }
+
+        function addPackageToCart(pkgId) {
+            const pkg = PACKAGES.find(p => p.id === pkgId);
+            if (!pkg) return;
+
+            const item = {
+                id: Date.now(),
+                type: 'package',
+                name: pkg.name,
+                desc: pkg.desc,
+                total: pkg.price
+            };
+            
+            state.cart.push(item);
+            renderCart();
+            showToast(`✅ ${pkg.name} agregado`);
+            toggleCart(true);
+        }
+
+        function addExtraToCart(extraId) {
+            const extra = EXTRAS.find(e => e.id === extraId);
+            if (!extra) return;
+
+             const item = {
+                id: Date.now(),
+                type: 'extra',
+                name: extra.name,
+                desc: extra.desc,
+                total: extra.price
+            };
+            
+            state.cart.push(item);
+            renderCart();
+            showToast(`✅ ${extra.name} agregado`);
+        }
+
+        function removeFromCart(itemId) {
+            state.cart = state.cart.filter(item => item.id !== itemId);
+            renderCart();
+            if (state.cart.length === 0) {
+                state.isCheckoutMode = false;
+                renderCart(); // Para actualizar vista vacía
+            }
+        }
+
+        // --- CARRITO Y CHECKOUT ---
+        function toggleCart(forceOpen = null) {
+            const modal = document.getElementById('cart-modal');
+            const overlay = document.getElementById('cart-overlay');
+            const panel = document.getElementById('cart-panel');
+            
+            const isOpen = !modal.classList.contains('hidden');
+            const shouldOpen = forceOpen !== null ? forceOpen : !isOpen;
+
+            if (shouldOpen) {
+                modal.classList.remove('hidden');
+                // Timeout para permitir render y que funcione la transición CSS
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    panel.classList.remove('translate-x-full');
+                }, 10);
+            } else {
+                overlay.classList.add('opacity-0');
+                panel.classList.add('translate-x-full');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        }
+        
+        function toggleMenuImage() {
+            const modal = document.getElementById('menu-image-modal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            const badge = document.getElementById('cart-count');
+            const totalEl = document.getElementById('cart-total');
+            const form = document.getElementById('checkout-form');
+            const btnAction = document.getElementById('btn-action-cart');
+            const btnBack = document.getElementById('btn-back-cart');
+
+            // Badge
+            badge.textContent = state.cart.length;
+            badge.classList.toggle('scale-0', state.cart.length === 0);
+
+            // Total
+            const total = state.cart.reduce((sum, item) => sum + item.total, 0);
+            totalEl.textContent = `$${total}`;
+
+            // Renderizar Items
+            if (state.cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-20 flex flex-col items-center justify-center opacity-40">
+                        <div class="bg-gray-200 p-6 rounded-full mb-4">
+                            <i class="fas fa-shopping-basket text-6xl text-gray-400"></i>
+                        </div>
+                        <p class="text-xl font-bold text-gray-600">Tu carrito está vacío</p>
+                        <p class="text-sm">¡Agrega una pizza deliciosa!</p>
+                        <button onclick="toggleCart(false)" class="mt-6 text-red-600 font-bold hover:underline">Regresar al Menú</button>
+                    </div>
+                `;
+                document.getElementById('cart-footer').classList.add('hidden');
+            } else {
+                document.getElementById('cart-footer').classList.remove('hidden');
+                
+                container.innerHTML = state.cart.map(item => {
+                    let contentHtml = '';
+                    let iconHtml = '';
+
+                    if (item.type === 'promo') {
+                        iconHtml = '<div class="bg-orange-100 text-orange-600 w-8 h-8 rounded-full flex items-center justify-center"><i class="fas fa-certificate"></i></div>';
+                        contentHtml = `
+                            <div class="font-bold text-red-700 text-sm uppercase tracking-wider mb-1">
+                                ${item.name}
+                            </div>
+                            <div class="text-gray-600 text-xs font-medium mb-1 pl-2 border-l-2 border-red-200 space-y-1">
+                                <div><i class="fas fa-pizza-slice text-[8px] mr-1 text-red-400"></i> ½ ${item.pizzas[0].name}</div>
+                                <div><i class="fas fa-pizza-slice text-[8px] mr-1 text-red-400"></i> ½ ${item.pizzas[1].name}</div>
+                            </div>
+                        `;
+                    } else if (item.type === 'package') {
+                        iconHtml = '<div class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center"><i class="fas fa-box"></i></div>';
+                        contentHtml = `
+                            <div class="font-bold text-gray-800 text-sm mb-1">${item.name}</div>
+                            <div class="text-gray-500 text-xs italic">${item.desc}</div>
+                        `;
+                    } else {
+                         iconHtml = '<div class="bg-green-100 text-green-600 w-8 h-8 rounded-full flex items-center justify-center"><i class="fas fa-plus"></i></div>';
+                        contentHtml = `
+                            <div class="font-bold text-gray-800 text-sm mb-1">${item.name}</div>
+                            <div class="text-gray-500 text-xs">${item.desc || ''}</div>
+                        `;
+                    }
+
+                    return `
+                    <div class="bg-white border border-gray-100 rounded-xl p-3 mb-3 relative flex gap-3 animate-pop shadow-sm">
+                        <div class="mt-1">${iconHtml}</div>
+                        <div class="flex-1">
+                            ${contentHtml}
+                        </div>
+                        <div class="text-right flex flex-col justify-between items-end">
+                             <div class="font-bold font-oswald text-lg text-gray-800">$${item.total}</div>
+                             <button onclick="removeFromCart(${item.id})" class="text-gray-300 hover:text-red-500 transition">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                `}).join('');
+            }
+
+            // Estados del Botón de Acción
+            if (state.isCheckoutMode) {
+                form.classList.remove('hidden');
+                btnBack.classList.remove('hidden');
+                
+                container.classList.add('hidden'); // Ocultar items para enfocar en form
+                
+                btnAction.innerHTML = '<i class="fab fa-whatsapp text-2xl"></i> ENVIAR PEDIDO';
+                btnAction.className = "w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg transition transform active:scale-95 flex justify-center items-center gap-3 animate-pulse";
+                btnAction.onclick = sendOrder;
+            } else {
+                form.classList.add('hidden');
+                btnBack.classList.add('hidden');
+                
+                container.classList.remove('hidden');
+                
+                btnAction.innerHTML = 'HACER PEDIDO <i class="fas fa-arrow-right"></i>';
+                btnAction.className = "w-full bg-gray-900 hover:bg-gray-800 text-white py-4 rounded-xl font-bold text-lg shadow-lg transition transform active:scale-95 flex justify-center items-center gap-3";
+                btnAction.onclick = proceedToCheckout;
+            }
+        }
+
+        function proceedToCheckout() {
+            state.isCheckoutMode = true;
+            renderCart();
+        }
+
+        function backToCart() {
+            state.isCheckoutMode = false;
+            renderCart();
+        }
+
+        // --- GEOLOCALIZACIÓN Y WHATSAPP ---
+        function getLocation() {
+            if (!navigator.geolocation) {
+                showToast("Tu navegador no soporta geolocalización", "error");
+                return;
+            }
+            
+            const btn = event.target;
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Obteniendo...';
+            btn.disabled = true;
+            
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    state.locationUrl = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                    document.getElementById('location-success').classList.remove('hidden');
+                    document.getElementById('customer-address').value = "📍 Ubicación GPS Adjunta (Ver link en WhatsApp)";
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    showToast("Ubicación agregada correctamente");
+                },
+                () => {
+                    showToast("No pudimos obtener tu ubicación. Escríbela manualmente.", "error");
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                }
+            );
+        }
+
+        function sendOrder() {
+            const name = document.getElementById('customer-name').value.trim();
+            const phone = document.getElementById('customer-phone').value.trim();
+            const address = document.getElementById('customer-address').value.trim();
+
+            if (!name || !phone || !address) {
+                showToast("Por favor completa todos los datos", "error");
+                return;
+            }
+
+            const total = state.cart.reduce((sum, item) => sum + item.total, 0);
+            
+            let msg = `*¡HOLA! QUIERO REALIZAR UN PEDIDO EN RAMY'S PIZZA 🍕*\n\n`;
+            msg += `*👤 Cliente:* ${name}\n`;
+            msg += `*📞 Tel:* ${phone}\n`;
+            
+            if (state.locationUrl) {
+                msg += `*📍 Ubicación GPS:* ${state.locationUrl}\n`;
+                if (!address.includes("GPS Adjunta")) msg += `*🏠 Ref:* ${address}\n\n`;
+            } else {
+                msg += `*🏠 Dirección:* ${address}\n\n`;
+            }
+
+            msg += `--------------------------------\n`;
+            msg += `*📝 MI ORDEN:*\n`;
+
+            state.cart.forEach((item, idx) => {
+                msg += `\n*${idx + 1}. ${item.name.toUpperCase()}* ($${item.total})\n`;
+                
+                if (item.type === 'promo') {
+                    msg += `   ▪️ ½ ${item.pizzas[0].name}\n`;
+                    msg += `   ▪️ ½ ${item.pizzas[1].name}\n`;
+                } else if (item.type === 'package') {
+                    msg += `   _(${item.desc})_\n`;
+                }
+            });
+
+            msg += `\n--------------------------------\n`;
+            msg += `*💰 TOTAL A PAGAR: $${total}*`;
+
+            const url = `https://wa.me/${BUSINESS_PHONE}?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+        }
+
+        // --- UTILERÍAS ---
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('notification-container');
+            const el = document.createElement('div');
+            
+            const bgClass = type === 'error' ? 'bg-red-600' : (type === 'warning' ? 'bg-orange-500' : 'bg-gray-900');
+            const icon = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle');
+            
+            el.className = `toast w-full px-6 py-4 rounded-xl text-white shadow-xl flex items-center gap-3 ${bgClass} border-l-4 border-yellow-400 animate-pop cursor-pointer`;
+            el.innerHTML = `<i class="fas ${icon} text-yellow-400 text-xl"></i>`;
+            el.innerHTML += `<span class="font-bold text-sm flex-1">${message}</span>`;
+            
+            // Permitir cerrar al click
+            el.onclick = () => el.remove();
+
+            container.appendChild(el);
+            setTimeout(() => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(-20px)';
+                setTimeout(() => el.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
