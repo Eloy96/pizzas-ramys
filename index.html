@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Ramy's Pizza | Menú Digital</title>
     
     <!-- Tailwind CSS -->
@@ -15,7 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- Personalización de Fuentes --- */
+        /* --- Reset y Fuentes --- */
+        html, body {
+            overflow-x: hidden; /* CRÍTICO: Evita scroll lateral fantasma */
+            width: 100%;
+            position: relative;
+            touch-action: manipulation; /* Mejora respuesta táctil */
+        }
         body { font-family: 'Fredoka', sans-serif; }
         h1, h2, h3, h4, .font-oswald { font-family: 'Oswald', sans-serif; }
 
@@ -27,16 +33,17 @@
             background-position: 0 0, 30px 30px;
         }
 
-        /* --- Animaciones --- */
+        /* --- Animaciones Suavizadas --- */
+        /* Ajustado para no exceder escala 1.0 y evitar desbordamiento lateral */
         @keyframes bounce-in {
-            0% { transform: scale(0.8); opacity: 0; }
-            60% { transform: scale(1.05); }
+            0% { transform: scale(0.9); opacity: 0; }
+            70% { transform: scale(1.02); } 
             100% { transform: scale(1); opacity: 1; }
         }
         .animate-pop { animation: bounce-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
         /* --- Estilos personalizados --- */
-        .pizza-card:hover { transform: translateY(-4px); }
+        .pizza-card:active { transform: scale(0.98); } /* Feedback táctil en móvil */
         
         .custom-input:focus {
             box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
@@ -44,7 +51,7 @@
         }
 
         /* Scrollbar para el carrito */
-        .cart-scroll::-webkit-scrollbar { width: 6px; }
+        .cart-scroll::-webkit-scrollbar { width: 4px; }
         .cart-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
         .cart-scroll::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 10px; }
         
@@ -63,7 +70,7 @@
         }
     </style>
 </head>
-<body class="text-gray-800 antialiased overflow-x-hidden pb-24">
+<body class="text-gray-800 antialiased pb-24 min-h-[100dvh]">
 
     <!-- Configuración del Negocio -->
     <script>
@@ -71,21 +78,21 @@
     </script>
 
     <!-- HEADER -->
-    <header class="bg-gradient-to-r from-red-700 to-orange-600 text-white shadow-xl sticky top-0 z-40 border-b-4 border-yellow-400">
+    <header class="bg-gradient-to-r from-red-700 to-orange-600 text-white shadow-xl sticky top-0 z-50 border-b-4 border-yellow-400 w-full">
         <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
             <!-- Logo -->
             <div class="flex items-center gap-3">
-                <div class="bg-white text-red-600 w-12 h-12 rounded-full flex items-center justify-center shadow-lg transform rotate-6 border-2 border-yellow-400">
-                    <i class="fas fa-pizza-slice text-2xl"></i>
+                <div class="bg-white text-red-600 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shadow-lg transform rotate-6 border-2 border-yellow-400 shrink-0">
+                    <i class="fas fa-pizza-slice text-xl md:text-2xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl md:text-3xl font-bold uppercase tracking-wider leading-none text-shadow">Ramy's Pizza</h1>
+                    <h1 class="text-xl md:text-3xl font-bold uppercase tracking-wider leading-none text-shadow">Ramy's Pizza</h1>
                     <p class="text-[10px] md:text-xs text-yellow-300 font-semibold tracking-widest uppercase">El Mirador</p>
                 </div>
             </div>
             
             <!-- Botones Header -->
-            <div class="flex gap-3">
+            <div class="flex gap-2 md:gap-3">
                 <button onclick="toggleMenuImage()" class="hidden md:flex bg-yellow-400 hover:bg-yellow-500 text-red-900 px-4 py-2 rounded-full font-bold shadow-md transition text-sm items-center gap-2 border-b-4 border-yellow-600 active:border-0 active:translate-y-1">
                     <i class="fas fa-image"></i> Ver Menú
                 </button>
@@ -103,23 +110,23 @@
     </header>
 
     <!-- CONTENEDOR DE NOTIFICACIONES -->
-    <div id="notification-container" class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 pointer-events-none w-full max-w-sm flex flex-col items-center gap-2 px-4"></div>
+    <div id="notification-container" class="fixed top-24 left-1/2 transform -translate-x-1/2 z-[60] pointer-events-none w-full max-w-sm flex flex-col items-center gap-2 px-4"></div>
 
-    <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-12">
+    <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-8 md:space-y-12 overflow-x-hidden">
         
         <!-- HERO BANNER (Promo Principal) -->
-        <div class="bg-gray-900 rounded-3xl p-8 md:p-12 text-center shadow-2xl relative overflow-hidden animate-pop border-4 border-yellow-500 group">
+        <div class="bg-gray-900 rounded-3xl p-6 md:p-12 text-center shadow-2xl relative overflow-hidden animate-pop border-4 border-yellow-500 group mx-auto w-full">
             <div class="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1590947132387-155cc02f3212?q=80&w=1600&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay group-hover:scale-105 transition-transform duration-1000"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
             
             <div class="relative z-10">
                 <span class="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold uppercase tracking-widest mb-4 inline-block shadow">Oferta Especial</span>
-                <h2 class="text-5xl md:text-7xl font-bold text-yellow-400 mb-2 drop-shadow-[0_4px_4px_rgba(0,0,0,1)] font-oswald italic">¡2x1 TODOS LOS DÍAS!</h2>
-                <p class="text-white text-lg md:text-2xl font-medium drop-shadow-md max-w-2xl mx-auto leading-relaxed">
+                <h2 class="text-4xl md:text-7xl font-bold text-yellow-400 mb-2 drop-shadow-[0_4px_4px_rgba(0,0,0,1)] font-oswald italic leading-tight">¡2x1 TODOS LOS DÍAS!</h2>
+                <p class="text-white text-base md:text-2xl font-medium drop-shadow-md max-w-2xl mx-auto leading-relaxed px-2">
                     Elige tu tamaño y llévate <span class="text-yellow-400 font-bold">2 pizzas enteras</span> por el precio de una.
                 </p>
                 <div class="mt-6 flex flex-wrap justify-center gap-2">
-                   <a href="#builder-section" class="bg-white text-red-600 px-6 py-3 rounded-full font-bold shadow-lg hover:bg-gray-100 transition transform hover:-translate-y-1">
+                   <a href="#builder-section" class="bg-white text-red-600 px-6 py-3 rounded-full font-bold shadow-lg hover:bg-gray-100 transition transform hover:-translate-y-1 text-sm md:text-base">
                        <i class="fas fa-arrow-down mr-2"></i> Armar Promo
                    </a>
                 </div>
@@ -127,30 +134,31 @@
         </div>
 
         <!-- SECCIÓN 1: ARMA TU PROMO (El Builder) -->
-        <div id="builder-section" class="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-gray-100 relative">
+        <div id="builder-section" class="bg-white p-4 md:p-8 rounded-3xl shadow-xl border border-gray-100 relative">
             <!-- Etiqueta Decorativa -->
-            <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-8 py-2 rounded-full font-bold shadow-lg border-2 border-white flex items-center gap-2">
+            <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-1.5 rounded-full font-bold shadow-lg border-2 border-white flex items-center gap-2 text-xs md:text-sm whitespace-nowrap z-10">
                 <i class="fas fa-tools"></i> ARMA TU 2x1
             </div>
 
             <!-- PASO 1: TAMAÑOS -->
-            <section class="mb-10 mt-6">
-                <h4 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3 border-b pb-2">
-                    <span class="bg-gray-800 text-white w-8 h-8 flex items-center justify-center rounded-full text-sm">1</span>
-                    Elige el Tamaño (Precio por 2 pizzas)
+            <section class="mb-8 mt-6">
+                <h4 class="text-xl md:text-2xl font-bold text-gray-800 mb-4 flex items-center gap-3 border-b pb-2">
+                    <span class="bg-gray-800 text-white w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full text-xs md:text-sm shrink-0">1</span>
+                    Elige el Tamaño <span class="text-xs text-gray-500 font-normal ml-auto">(Precio por 2)</span>
                 </h4>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5" id="sizes-container">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="sizes-container">
                     <!-- Se llena con JS -->
                 </div>
             </section>
 
             <!-- BARRA DE ESTADO (Sticky) -->
-            <div id="status-bar" class="hidden sticky top-24 z-30 bg-white/95 backdrop-blur-md shadow-lg border border-red-100 p-4 rounded-xl mb-8 transform transition-all duration-300 ring-1 ring-red-50">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div class="text-center md:text-left">
-                        <div class="text-[10px] text-red-500 font-bold uppercase tracking-widest">Estás armando:</div>
-                        <div class="font-bold text-gray-800 text-2xl font-oswald" id="status-size-label">Promo Grande</div>
+            <!-- Ajustado top-16 para que no choque con el header -->
+            <div id="status-bar" class="hidden sticky top-20 z-40 bg-white/95 backdrop-blur-md shadow-lg border border-red-100 p-3 md:p-4 rounded-xl mb-8 transform transition-all duration-300 ring-1 ring-red-50 mx-[-0.5rem] md:mx-0">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-3">
+                    <div class="text-center md:text-left w-full md:w-auto flex justify-between md:block items-center">
+                        <div class="text-[10px] text-red-500 font-bold uppercase tracking-widest text-left">Estás armando:</div>
+                        <div class="font-bold text-gray-800 text-lg md:text-2xl font-oswald text-right md:text-left" id="status-size-label">Promo Grande</div>
                     </div>
                     
                     <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
@@ -159,7 +167,7 @@
                         </div>
                         
                         <button id="btn-add-promo" onclick="addPromoToCart()" class="hidden w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg animate-pulse transition transform hover:scale-105 items-center justify-center gap-2 text-sm uppercase">
-                            <i class="fas fa-check-circle text-lg"></i> Agregar al Pedido
+                            <i class="fas fa-check-circle text-lg"></i> Agregar
                         </button>
                     </div>
                 </div>
@@ -167,41 +175,41 @@
 
             <!-- PASO 2: PIZZAS (Sabores) -->
             <section id="pizzas-section" class="disabled-section transition-all duration-500">
-                <h4 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3 border-b pb-2">
-                    <span class="bg-gray-800 text-white w-8 h-8 flex items-center justify-center rounded-full text-sm">2</span>
+                <h4 class="text-xl md:text-2xl font-bold text-gray-800 mb-4 flex items-center gap-3 border-b pb-2">
+                    <span class="bg-gray-800 text-white w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full text-xs md:text-sm shrink-0">2</span>
                     Escoge tus 2 Pizzas
-                    <span class="text-sm font-normal text-gray-500 ml-auto">(Toca para seleccionar)</span>
+                    <span class="text-xs text-gray-500 font-normal ml-auto hidden md:inline">(Toca para seleccionar)</span>
                 </h4>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="pizzas-container">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="pizzas-container">
                     <!-- Se llena con JS -->
                 </div>
             </section>
         </div>
 
         <!-- SECCIÓN 2: PAQUETES FAMILIARES -->
-        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-gray-100 relative overflow-hidden">
-            <div class="absolute top-0 right-0 bg-yellow-400 text-red-900 font-bold px-10 py-1 transform rotate-45 translate-x-10 translate-y-5 shadow-sm z-10 text-xs tracking-widest uppercase">Ofertas</div>
+        <div class="bg-white p-4 md:p-8 rounded-3xl shadow-xl border border-gray-100 relative overflow-hidden">
+            <div class="absolute top-0 right-0 bg-yellow-400 text-red-900 font-bold px-10 py-1 transform rotate-45 translate-x-10 translate-y-5 shadow-sm z-10 text-[10px] md:text-xs tracking-widest uppercase">Ofertas</div>
             
-            <div class="flex items-center gap-3 mb-8">
-                <div class="bg-orange-100 text-orange-600 p-3 rounded-xl">
-                    <i class="fas fa-box-open text-2xl"></i>
+            <div class="flex items-center gap-3 mb-6">
+                <div class="bg-orange-100 text-orange-600 p-2 md:p-3 rounded-xl">
+                    <i class="fas fa-box-open text-xl md:text-2xl"></i>
                 </div>
-                <h3 class="text-3xl font-bold text-gray-800 font-oswald uppercase">Paquetes Familiares</h3>
+                <h3 class="text-2xl md:text-3xl font-bold text-gray-800 font-oswald uppercase">Paquetes</h3>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="packages-container">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6" id="packages-container">
                 <!-- Se llena con JS -->
             </div>
         </div>
 
         <!-- SECCIÓN 3: EXTRAS Y BEBIDAS -->
-        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-gray-100">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="bg-blue-100 text-blue-600 p-3 rounded-xl">
-                    <i class="fas fa-wine-bottle text-2xl"></i>
+        <div class="bg-white p-4 md:p-8 rounded-3xl shadow-xl border border-gray-100">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="bg-blue-100 text-blue-600 p-2 md:p-3 rounded-xl">
+                    <i class="fas fa-wine-bottle text-xl md:text-2xl"></i>
                 </div>
-                <h3 class="text-3xl font-bold text-gray-800 font-oswald uppercase">Bebidas y Extras</h3>
+                <h3 class="text-2xl md:text-3xl font-bold text-gray-800 font-oswald uppercase">Bebidas y Extras</h3>
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="extras-container">
@@ -210,7 +218,7 @@
         </div>
 
         <!-- INFO PAGOS -->
-        <div class="bg-gray-800 text-gray-300 p-6 rounded-2xl text-center text-sm space-y-2 border border-gray-700">
+        <div class="bg-gray-800 text-gray-300 p-6 rounded-2xl text-center text-sm space-y-3 border border-gray-700 mx-auto w-full">
             <p><i class="fas fa-credit-card mr-2 text-yellow-400"></i> Pagos con Terminal son solamente en la sucursal</p>
             <p><i class="fas fa-camera mr-2 text-yellow-400"></i> Pagos con transferencia: enviar captura de pantalla</p>
             <p class="text-yellow-400 font-bold mt-2 pt-2 border-t border-gray-700 inline-block">
@@ -221,15 +229,15 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-black text-gray-500 text-center py-8 text-xs">
+    <footer class="bg-black text-gray-500 text-center py-8 text-xs w-full">
         <p>&copy; 2024 Ramy's Pizza. Todos los derechos reservados.</p>
     </footer>
 
     <!-- MODAL MENU IMAGEN -->
-    <div id="menu-image-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4 transition-opacity duration-300" onclick="toggleMenuImage()">
-        <div class="relative max-w-2xl w-full animate-pop" onclick="event.stopPropagation()">
+    <div id="menu-image-modal" class="fixed inset-0 z-[70] bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4 transition-opacity duration-300" onclick="toggleMenuImage()">
+        <div class="relative max-w-2xl w-full animate-pop max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
             <button onclick="toggleMenuImage()" class="absolute -top-12 right-0 text-white text-3xl hover:text-red-400 font-bold bg-white/10 w-10 h-10 rounded-full flex items-center justify-center transition">&times;</button>
-            <div class="bg-white p-2 rounded-lg shadow-2xl overflow-hidden">
+            <div class="bg-white p-2 rounded-lg shadow-2xl">
                 <!-- Imagen placeholder robusta -->
                 <img src="https://i.ibb.co/6yXH8qL/menu-ramy.jpg" onerror="this.src='https://images.unsplash.com/photo-1574126154517-d1e0d89e7344?auto=format&fit=crop&w=800&q=80'; this.parentElement.innerHTML += '<div class=\'text-center p-4 text-red-500\'>Imagen del menú no disponible, por favor usa el menú digital.</div>'" alt="Menú Ramy's Pizza" class="w-full h-auto rounded">
             </div>
@@ -237,16 +245,16 @@
     </div>
 
     <!-- MODAL CARRITO (SIDEBAR) -->
-    <div id="cart-modal" class="fixed inset-0 z-50 hidden">
+    <div id="cart-modal" class="fixed inset-0 z-[80] hidden">
         <!-- Overlay -->
         <div onclick="toggleCart()" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="cart-overlay"></div>
         
-        <!-- Panel -->
-        <div class="absolute right-0 top-0 h-full w-full md:w-[450px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col" id="cart-panel">
+        <!-- Panel (Usando 100dvh para móviles) -->
+        <div class="absolute right-0 top-0 h-[100dvh] w-full md:w-[450px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col" id="cart-panel">
             
             <!-- Header Carrito -->
-            <div class="bg-gray-900 p-5 text-white flex justify-between items-center shadow-md z-10">
-                <h2 class="text-2xl font-bold flex items-center gap-2 font-oswald tracking-wide">
+            <div class="bg-gray-900 p-4 md:p-5 text-white flex justify-between items-center shadow-md z-10 shrink-0">
+                <h2 class="text-xl md:text-2xl font-bold flex items-center gap-2 font-oswald tracking-wide">
                     <i class="fas fa-receipt text-yellow-400"></i> Tu Pedido
                 </h2>
                 <button onclick="toggleCart()" class="text-white hover:text-red-400 transition bg-white/10 w-8 h-8 rounded-full flex items-center justify-center">
@@ -255,20 +263,20 @@
             </div>
 
             <!-- Lista de Items -->
-            <div class="flex-1 overflow-y-auto p-5 cart-scroll bg-gray-50" id="cart-items-container">
+            <div class="flex-1 overflow-y-auto p-4 md:p-5 cart-scroll bg-gray-50 touch-pan-y" id="cart-items-container">
                 <!-- Items del carrito -->
             </div>
 
             <!-- Footer / Checkout -->
-            <div class="bg-white border-t border-gray-200 p-5 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] z-20" id="cart-footer">
+            <div class="bg-white border-t border-gray-200 p-4 md:p-5 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] z-20 shrink-0" id="cart-footer">
                 
                 <!-- Checkout Form -->
-                <div id="checkout-form" class="hidden space-y-4 mb-4 animate-pop">
+                <div id="checkout-form" class="hidden space-y-3 mb-4 animate-pop overflow-y-auto max-h-[40vh] pr-1">
                     <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg">
-                        <h3 class="font-bold text-yellow-800 text-sm mb-1 flex items-center gap-2">
+                        <h3 class="font-bold text-yellow-800 text-xs md:text-sm mb-1 flex items-center gap-2">
                             <i class="fas fa-map-marker-alt"></i> Datos de Entrega
                         </h3>
-                        <p class="text-xs text-yellow-700">Verifica que tu ubicación sea correcta.</p>
+                        <p class="text-[10px] md:text-xs text-yellow-700">Verifica que tu ubicación sea correcta.</p>
                     </div>
                     
                     <div class="space-y-3">
@@ -293,7 +301,7 @@
                             </div>
                         </div>
 
-                        <!-- SECCIÓN DE PAGO NUEVA -->
+                        <!-- SECCIÓN DE PAGO -->
                         <div>
                             <label class="text-xs font-bold text-gray-500 uppercase ml-1">Método de Pago</label>
                             <div class="relative">
@@ -319,10 +327,10 @@
                 <!-- Totales y Botones -->
                 <div class="flex justify-between items-end mb-4 border-t border-dashed border-gray-300 pt-4">
                     <span class="text-gray-600 font-medium text-sm uppercase">Total a Pagar</span>
-                    <span class="text-4xl font-bold text-red-600 font-oswald tracking-tight" id="cart-total">$0</span>
+                    <span class="text-3xl md:text-4xl font-bold text-red-600 font-oswald tracking-tight" id="cart-total">$0</span>
                 </div>
                 
-                <button id="btn-action-cart" onclick="proceedToCheckout()" class="w-full bg-gray-900 hover:bg-gray-800 text-white py-4 rounded-xl font-bold text-lg shadow-lg transition transform active:scale-95 flex justify-center items-center gap-3">
+                <button id="btn-action-cart" onclick="proceedToCheckout()" class="w-full bg-gray-900 hover:bg-gray-800 text-white py-3 md:py-4 rounded-xl font-bold text-base md:text-lg shadow-lg transition transform active:scale-95 flex justify-center items-center gap-3">
                     CONTINUAR <i class="fas fa-arrow-right"></i>
                 </button>
                 
@@ -407,16 +415,16 @@
             container.innerHTML = SIZES.map(size => `
                 <div onclick="selectSize('${size.id}')" 
                      class="cursor-pointer relative overflow-hidden bg-white rounded-2xl shadow-sm border-2 transition-all duration-300 group hover:shadow-lg transform active:scale-95 ${state.activeSize?.id === size.id ? 'border-red-600 bg-red-50 ring-2 ring-red-100' : 'border-gray-100 hover:border-red-200'}">
-                    <div class="p-4 flex flex-row sm:flex-col items-center justify-between sm:justify-center gap-4">
-                        <div class="text-red-500 transform transition-transform group-hover:rotate-12 ${size.iconSize} bg-red-100 rounded-full w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
+                    <div class="p-3 md:p-4 flex flex-row sm:flex-col items-center justify-between sm:justify-center gap-3 md:gap-4">
+                        <div class="text-red-500 transform transition-transform group-hover:rotate-12 ${size.iconSize} bg-red-100 rounded-full w-12 h-12 md:w-14 md:h-14 sm:w-16 sm:h-16 flex items-center justify-center shrink-0">
                             <i class="fas fa-pizza-slice"></i>
                         </div>
                         <div class="text-left sm:text-center flex-1">
-                            <h4 class="font-bold text-gray-800 text-lg uppercase tracking-wide font-oswald">${size.label}</h4>
-                            <p class="text-xs text-gray-500 mb-1">${size.slices}</p>
-                            <span class="inline-block bg-green-500 text-white px-3 py-1 rounded-full font-bold font-oswald text-lg shadow-sm">$${size.price}</span>
+                            <h4 class="font-bold text-gray-800 text-base md:text-lg uppercase tracking-wide font-oswald">${size.label}</h4>
+                            <p class="text-[10px] md:text-xs text-gray-500 mb-1">${size.slices}</p>
+                            <span class="inline-block bg-green-500 text-white px-2 py-0.5 md:px-3 md:py-1 rounded-full font-bold font-oswald text-sm md:text-lg shadow-sm">$${size.price}</span>
                         </div>
-                        ${state.activeSize?.id === size.id ? '<div class="absolute top-2 right-2 text-red-600"><i class="fas fa-check-circle text-xl"></i></div>' : ''}
+                        ${state.activeSize?.id === size.id ? '<div class="absolute top-2 right-2 text-red-600"><i class="fas fa-check-circle text-lg md:text-xl"></i></div>' : ''}
                     </div>
                 </div>
             `).join('');
@@ -433,33 +441,33 @@
                      class="pizza-card bg-white rounded-2xl shadow-sm overflow-hidden border-2 cursor-pointer relative group transition-all duration-300 ${isSelected ? 'border-green-500 ring-2 ring-green-100 shadow-md' : 'border-gray-100 hover:border-red-200'}">
                     
                     <!-- Imagen -->
-                    <div class="h-32 sm:h-40 overflow-hidden relative">
+                    <div class="h-28 md:h-32 sm:h-40 overflow-hidden relative">
                         <img src="${pizza.img}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="${pizza.name}">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         
-                        <div class="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded shadow-sm uppercase tracking-wider ${pizza.type === TYPE_SPECIAL ? 'bg-purple-100 text-purple-700' : 'bg-orange-100 text-orange-700'}">
+                        <div class="absolute top-2 right-2 text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded shadow-sm uppercase tracking-wider ${pizza.type === TYPE_SPECIAL ? 'bg-purple-100 text-purple-700' : 'bg-orange-100 text-orange-700'}">
                             ${pizza.type}
                         </div>
 
                         <!-- Badge de selección -->
                         ${isSelected ? `
                             <div class="absolute inset-0 bg-green-600/60 flex items-center justify-center backdrop-blur-[2px] animate-pop">
-                                <div class="bg-white text-green-600 w-12 h-12 rounded-full flex items-center justify-center shadow-lg font-bold text-2xl border-4 border-green-500">
+                                <div class="bg-white text-green-600 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shadow-lg font-bold text-xl md:text-2xl border-4 border-green-500">
                                     ${selectionIndex + 1}
                                 </div>
                             </div>
                         ` : ''}
                         
-                        <div class="absolute bottom-0 left-0 w-full p-3">
-                            <h4 class="font-bold text-white text-lg leading-none drop-shadow-md font-oswald tracking-wide">${pizza.name}</h4>
+                        <div class="absolute bottom-0 left-0 w-full p-2 md:p-3">
+                            <h4 class="font-bold text-white text-base md:text-lg leading-none drop-shadow-md font-oswald tracking-wide">${pizza.name}</h4>
                         </div>
                     </div>
 
                     <!-- Info -->
-                    <div class="p-4">
-                        <p class="text-xs text-gray-600 leading-snug h-8 overflow-hidden">${pizza.ingredients}</p>
+                    <div class="p-3 md:p-4">
+                        <p class="text-[10px] md:text-xs text-gray-600 leading-snug h-8 overflow-hidden">${pizza.ingredients}</p>
                         <div class="mt-2 text-right">
-                            <span class="text-[10px] font-bold text-gray-400 uppercase">Click para añadir</span>
+                            <span class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase">Click para añadir</span>
                         </div>
                     </div>
                 </div>
@@ -470,17 +478,17 @@
             const container = document.getElementById('packages-container');
             container.innerHTML = PACKAGES.map(pkg => `
                 <div class="flex flex-col sm:flex-row bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group">
-                    <div class="bg-yellow-400 w-full sm:w-28 flex items-center justify-center p-4 text-red-800 group-hover:bg-yellow-500 transition">
-                        <i class="${pkg.icon} text-4xl"></i>
+                    <div class="bg-yellow-400 w-full sm:w-28 flex items-center justify-center p-3 md:p-4 text-red-800 group-hover:bg-yellow-500 transition">
+                        <i class="${pkg.icon} text-3xl md:text-4xl"></i>
                     </div>
-                    <div class="p-4 flex-1 flex flex-col justify-between">
+                    <div class="p-3 md:p-4 flex-1 flex flex-col justify-between">
                         <div>
-                            <h4 class="font-bold text-gray-800 text-lg font-oswald uppercase">${pkg.name}</h4>
+                            <h4 class="font-bold text-gray-800 text-base md:text-lg font-oswald uppercase">${pkg.name}</h4>
                             <p class="text-xs text-gray-600 mb-2 leading-relaxed">${pkg.desc}</p>
                         </div>
                         <div class="flex justify-between items-center mt-2 border-t pt-2 border-dashed border-gray-200">
-                            <span class="text-2xl font-bold text-red-600 font-oswald">$${pkg.price}</span>
-                            <button onclick="addPackageToCart('${pkg.id}')" class="bg-red-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-red-700 transition shadow-md active:scale-95">
+                            <span class="text-xl md:text-2xl font-bold text-red-600 font-oswald">$${pkg.price}</span>
+                            <button onclick="addPackageToCart('${pkg.id}')" class="bg-red-600 text-white text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-red-700 transition shadow-md active:scale-95">
                                 <i class="fas fa-plus mr-1"></i> AGREGAR
                             </button>
                         </div>
@@ -494,16 +502,16 @@
             container.innerHTML = EXTRAS.map(extra => `
                 <div class="bg-white border border-gray-100 rounded-xl p-3 shadow-sm hover:shadow-md transition flex items-center justify-between gap-3 group">
                     <div class="flex items-center gap-3">
-                        <div class="bg-blue-50 text-blue-500 w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-blue-100 transition">
+                        <div class="bg-blue-50 text-blue-500 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center group-hover:bg-blue-100 transition shrink-0">
                             <i class="${extra.icon}"></i>
                         </div>
                         <div>
-                            <h5 class="font-bold text-gray-800 text-sm leading-tight">${extra.name}</h5>
-                            <div class="text-red-600 font-bold text-sm">$${extra.price}</div>
+                            <h5 class="font-bold text-gray-800 text-xs md:text-sm leading-tight">${extra.name}</h5>
+                            <div class="text-red-600 font-bold text-xs md:text-sm">$${extra.price}</div>
                         </div>
                     </div>
                     <button onclick="addExtraToCart('${extra.id}')" class="text-gray-300 hover:text-green-500 transition transform active:scale-110">
-                        <i class="fas fa-plus-circle text-3xl"></i>
+                        <i class="fas fa-plus-circle text-2xl md:text-3xl"></i>
                     </button>
                 </div>
             `).join('');
@@ -534,13 +542,13 @@
                 const pizza = state.selection[i];
                 if (pizza) {
                     slotsHtml += `
-                        <div class="bg-green-100 text-green-700 border border-green-300 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm flex items-center animate-pop gap-2">
-                            <i class="fas fa-check-circle"></i> ${pizza.name}
+                        <div class="bg-green-100 text-green-700 border border-green-300 px-2 py-1 md:px-3 md:py-1.5 rounded-lg text-[10px] md:text-xs font-bold shadow-sm flex items-center animate-pop gap-2 truncate max-w-[120px] md:max-w-none">
+                            <i class="fas fa-check-circle shrink-0"></i> ${pizza.name}
                         </div>`;
                 } else {
                     slotsHtml += `
-                        <div class="bg-gray-50 text-gray-400 border border-gray-300 border-dashed px-3 py-1.5 rounded-lg text-xs flex items-center gap-2">
-                            <span class="w-4 h-4 rounded-full bg-gray-200 text-[10px] flex items-center justify-center">${i+1}</span>
+                        <div class="bg-gray-50 text-gray-400 border border-gray-300 border-dashed px-2 py-1 md:px-3 md:py-1.5 rounded-lg text-[10px] md:text-xs flex items-center gap-2">
+                            <span class="w-4 h-4 rounded-full bg-gray-200 text-[9px] flex items-center justify-center shrink-0">${i+1}</span>
                             Selecciona Pizza ${i + 1}
                         </div>`;
                 }
@@ -585,14 +593,11 @@
             const exists = state.selection.find(p => p.id === pizzaId);
 
             if (exists) {
-                // Opción: permitir deseleccionar (opcional)
-                // state.selection = state.selection.filter(p => p.id !== pizzaId);
                 return; 
             }
 
             if (state.selection.length >= 2) {
                 showToast("⚠️ ¡Ya elegiste tus 2 pizzas! Agrega al carrito.", "warning");
-                // Vibración en móviles si es posible
                 if(navigator.vibrate) navigator.vibrate(200);
                 return;
             }
@@ -603,8 +608,6 @@
             
             if (state.selection.length === 2) {
                  showToast("¡Promo lista! Agrégala al carrito 👇");
-                 // Scroll suave al botón de agregar
-                 // document.getElementById('status-bar').scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
 
@@ -679,7 +682,7 @@
             }
         }
 
-        // --- FUNCIONES DE PAGO NUEVAS ---
+        // --- FUNCIONES DE PAGO ---
         function togglePaymentInfo() {
             const method = document.getElementById('payment-method').value;
             const info = document.getElementById('payment-info');
@@ -715,15 +718,20 @@
 
             if (shouldOpen) {
                 modal.classList.remove('hidden');
-                // Timeout para permitir render y que funcione la transición CSS
                 setTimeout(() => {
                     overlay.classList.remove('opacity-0');
                     panel.classList.remove('translate-x-full');
                 }, 10);
+                // Bloquear scroll del body
+                document.body.style.overflow = 'hidden';
             } else {
                 overlay.classList.add('opacity-0');
                 panel.classList.add('translate-x-full');
-                setTimeout(() => modal.classList.add('hidden'), 300);
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    // Restaurar scroll del body
+                    document.body.style.overflow = '';
+                }, 300);
             }
         }
         
@@ -731,8 +739,10 @@
             const modal = document.getElementById('menu-image-modal');
             if (modal.classList.contains('hidden')) {
                 modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
             } else {
                 modal.classList.add('hidden');
+                document.body.style.overflow = '';
             }
         }
 
@@ -773,39 +783,39 @@
                     let iconHtml = '';
 
                     if (item.type === 'promo') {
-                        iconHtml = '<div class="bg-orange-100 text-orange-600 w-8 h-8 rounded-full flex items-center justify-center"><i class="fas fa-certificate"></i></div>';
+                        iconHtml = '<div class="bg-orange-100 text-orange-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0"><i class="fas fa-certificate"></i></div>';
                         contentHtml = `
-                            <div class="font-bold text-red-700 text-sm uppercase tracking-wider mb-1">
+                            <div class="font-bold text-red-700 text-xs md:text-sm uppercase tracking-wider mb-1">
                                 ${item.name}
                             </div>
-                            <div class="text-gray-600 text-xs font-medium mb-1 pl-2 border-l-2 border-red-200 space-y-1">
+                            <div class="text-gray-600 text-[10px] md:text-xs font-medium mb-1 pl-2 border-l-2 border-red-200 space-y-1">
                                 <div><i class="fas fa-pizza-slice text-[8px] mr-1 text-red-400"></i> 1. ${item.pizzas[0].name}</div>
                                 <div><i class="fas fa-pizza-slice text-[8px] mr-1 text-red-400"></i> 2. ${item.pizzas[1].name}</div>
                             </div>
                         `;
                     } else if (item.type === 'package') {
-                        iconHtml = '<div class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center"><i class="fas fa-box"></i></div>';
+                        iconHtml = '<div class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0"><i class="fas fa-box"></i></div>';
                         contentHtml = `
-                            <div class="font-bold text-gray-800 text-sm mb-1">${item.name}</div>
-                            <div class="text-gray-500 text-xs italic">${item.desc}</div>
+                            <div class="font-bold text-gray-800 text-xs md:text-sm mb-1">${item.name}</div>
+                            <div class="text-gray-500 text-[10px] md:text-xs italic">${item.desc}</div>
                         `;
                     } else {
-                         iconHtml = '<div class="bg-green-100 text-green-600 w-8 h-8 rounded-full flex items-center justify-center"><i class="fas fa-plus"></i></div>';
+                         iconHtml = '<div class="bg-green-100 text-green-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0"><i class="fas fa-plus"></i></div>';
                         contentHtml = `
-                            <div class="font-bold text-gray-800 text-sm mb-1">${item.name}</div>
-                            <div class="text-gray-500 text-xs">${item.desc || ''}</div>
+                            <div class="font-bold text-gray-800 text-xs md:text-sm mb-1">${item.name}</div>
+                            <div class="text-gray-500 text-[10px] md:text-xs">${item.desc || ''}</div>
                         `;
                     }
 
                     return `
-                    <div class="bg-white border border-gray-100 rounded-xl p-3 mb-3 relative flex gap-3 animate-pop shadow-sm">
+                    <div class="bg-white border border-gray-100 rounded-xl p-3 mb-3 relative flex gap-3 animate-pop shadow-sm items-start">
                         <div class="mt-1">${iconHtml}</div>
                         <div class="flex-1">
                             ${contentHtml}
                         </div>
-                        <div class="text-right flex flex-col justify-between items-end">
-                             <div class="font-bold font-oswald text-lg text-gray-800">$${item.total}</div>
-                             <button onclick="removeFromCart(${item.id})" class="text-gray-300 hover:text-red-500 transition">
+                        <div class="text-right flex flex-col justify-between items-end gap-2">
+                             <div class="font-bold font-oswald text-base md:text-lg text-gray-800">$${item.total}</div>
+                             <button onclick="removeFromCart(${item.id})" class="text-gray-300 hover:text-red-500 transition p-1">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
@@ -817,20 +827,18 @@
             if (state.isCheckoutMode) {
                 form.classList.remove('hidden');
                 btnBack.classList.remove('hidden');
-                
-                container.classList.add('hidden'); // Ocultar items para enfocar en form
+                container.classList.add('hidden'); // Ocultar items
                 
                 btnAction.innerHTML = '<i class="fab fa-whatsapp text-2xl"></i> ENVIAR PEDIDO';
-                btnAction.className = "w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg transition transform active:scale-95 flex justify-center items-center gap-3 animate-pulse";
+                btnAction.className = "w-full bg-green-600 hover:bg-green-700 text-white py-3 md:py-4 rounded-xl font-bold text-base md:text-lg shadow-lg transition transform active:scale-95 flex justify-center items-center gap-3 animate-pulse";
                 btnAction.onclick = sendOrder;
             } else {
                 form.classList.add('hidden');
                 btnBack.classList.add('hidden');
-                
                 container.classList.remove('hidden');
                 
                 btnAction.innerHTML = 'HACER PEDIDO <i class="fas fa-arrow-right"></i>';
-                btnAction.className = "w-full bg-gray-900 hover:bg-gray-800 text-white py-4 rounded-xl font-bold text-lg shadow-lg transition transform active:scale-95 flex justify-center items-center gap-3";
+                btnAction.className = "w-full bg-gray-900 hover:bg-gray-800 text-white py-3 md:py-4 rounded-xl font-bold text-base md:text-lg shadow-lg transition transform active:scale-95 flex justify-center items-center gap-3";
                 btnAction.onclick = proceedToCheckout;
             }
         }
@@ -838,7 +846,6 @@
         function proceedToCheckout() {
             state.isCheckoutMode = true;
             renderCart();
-            // Inicializar info de pago
             setTimeout(() => togglePaymentInfo(), 0);
         }
 
@@ -881,7 +888,6 @@
             const phone = document.getElementById('customer-phone').value.trim();
             const address = document.getElementById('customer-address').value.trim();
             
-            // Obtener metodo de pago
             const paymentSelect = document.getElementById('payment-method');
             const paymentMethodText = paymentSelect.options[paymentSelect.selectedIndex].text;
 
@@ -937,7 +943,6 @@
             el.innerHTML = `<i class="fas ${icon} text-yellow-400 text-xl"></i>`;
             el.innerHTML += `<span class="font-bold text-sm flex-1">${message}</span>`;
             
-            // Permitir cerrar al click
             el.onclick = () => el.remove();
 
             container.appendChild(el);
