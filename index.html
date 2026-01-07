@@ -64,6 +64,9 @@
         .toast { transition: all 0.3s ease; z-index: 100; }
         .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .disabled-section { opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
+        
+        /* Utilería para evitar rebote de scroll */
+        .overscroll-none { overscroll-behavior: none; }
     </style>
 </head>
 <body class="text-gray-800 antialiased pb-32 min-h-[100dvh]"> <!-- pb-32 para dar espacio a la barra flotante -->
@@ -228,10 +231,10 @@
     </div>
 
     <!-- CARRITO FULL SCREEN (MODAL) -->
-    <div id="cart-modal" class="fixed inset-0 z-[100] hidden bg-white">
+    <div id="cart-modal" class="fixed inset-0 z-[100] hidden bg-white overscroll-none">
         
         <!-- Contenedor Flex para layout completo -->
-        <div class="h-full w-full flex flex-col bg-white" id="cart-panel">
+        <div class="h-[100dvh] w-full flex flex-col bg-white" id="cart-panel">
             
             <!-- Header Carrito -->
             <div class="bg-gray-900 p-4 text-white flex justify-between items-center shadow-md z-10 shrink-0">
@@ -254,10 +257,10 @@
             </div>
 
             <!-- Footer / Checkout (Sticky bottom inside modal) -->
-            <div class="bg-white border-t border-gray-200 p-4 shadow-[0_-5px_30px_rgba(0,0,0,0.1)] z-20 shrink-0" id="cart-footer">
+            <div class="bg-white border-t border-gray-200 p-3 shadow-[0_-5px_30px_rgba(0,0,0,0.1)] z-20 shrink-0" id="cart-footer">
                 
                 <!-- Checkout Form -->
-                <div id="checkout-form" class="hidden space-y-3 mb-4 animate-pop overflow-y-auto max-h-[40vh] pr-1">
+                <div id="checkout-form" class="hidden space-y-3 mb-2 animate-pop overflow-y-auto max-h-[40vh] pr-1">
                     <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg">
                         <h3 class="font-bold text-yellow-800 text-xs md:text-sm mb-1 flex items-center gap-2">
                             <i class="fas fa-map-marker-alt"></i> Datos de Entrega
@@ -304,16 +307,16 @@
                 </div>
 
                 <!-- Totales y Botones -->
-                <div class="flex justify-between items-end mb-4 border-t border-dashed border-gray-300 pt-4">
+                <div class="flex justify-between items-end mb-2 border-t border-dashed border-gray-300 pt-2">
                     <span class="text-gray-600 font-medium text-sm uppercase">Total a Pagar</span>
                     <span class="text-3xl md:text-4xl font-bold text-red-600 font-oswald tracking-tight" id="cart-total">$0</span>
                 </div>
                 
-                <button id="btn-action-cart" onclick="proceedToCheckout()" class="w-full bg-gray-900 hover:bg-gray-800 text-white py-3 md:py-4 rounded-xl font-bold text-base md:text-lg shadow-lg transition transform active:scale-95 flex justify-center items-center gap-3">
+                <button id="btn-action-cart" onclick="proceedToCheckout()" class="w-full bg-gray-900 hover:bg-gray-800 text-white py-3 rounded-xl font-bold text-base md:text-lg shadow-lg transition transform active:scale-95 flex justify-center items-center gap-3">
                     CONTINUAR <i class="fas fa-arrow-right"></i>
                 </button>
                 
-                <button id="btn-back-cart" onclick="backToCart()" class="hidden w-full mt-3 text-gray-400 hover:text-gray-600 text-sm font-bold py-2 transition">
+                <button id="btn-back-cart" onclick="backToCart()" class="hidden w-full mt-2 text-gray-400 hover:text-gray-600 text-sm font-bold py-2 transition">
                     Volver al pedido
                 </button>
             </div>
@@ -687,6 +690,7 @@
         // --- CARRITO Y CHECKOUT ---
         function toggleCart(forceOpen = null) {
             const modal = document.getElementById('cart-modal');
+            const statusbar = document.getElementById('status-bar'); // Seleccionar status-bar
             
             const isOpen = !modal.classList.contains('hidden');
             const shouldOpen = forceOpen !== null ? forceOpen : !isOpen;
@@ -694,9 +698,12 @@
             if (shouldOpen) {
                 modal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
+                if(statusbar) statusbar.style.display = 'none'; // Ocultar al abrir
             } else {
                 modal.classList.add('hidden');
                 document.body.style.overflow = '';
+                // Mostrar solo si hay selección activa
+                if(statusbar && state.activeSize) statusbar.style.display = 'block'; 
             }
         }
         
