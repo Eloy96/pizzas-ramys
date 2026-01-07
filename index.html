@@ -116,11 +116,11 @@
                 <span class="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold uppercase tracking-widest mb-4 inline-block shadow">Oferta Especial</span>
                 <h2 class="text-5xl md:text-7xl font-bold text-yellow-400 mb-2 drop-shadow-[0_4px_4px_rgba(0,0,0,1)] font-oswald italic">¡2x1 TODOS LOS DÍAS!</h2>
                 <p class="text-white text-lg md:text-2xl font-medium drop-shadow-md max-w-2xl mx-auto leading-relaxed">
-                    Elige tu tamaño y combina <span class="text-yellow-400 font-bold">2 mitades diferentes</span>.
+                    Elige tu tamaño y llévate <span class="text-yellow-400 font-bold">2 pizzas enteras</span> por el precio de una.
                 </p>
                 <div class="mt-6 flex flex-wrap justify-center gap-2">
                    <a href="#builder-section" class="bg-white text-red-600 px-6 py-3 rounded-full font-bold shadow-lg hover:bg-gray-100 transition transform hover:-translate-y-1">
-                       <i class="fas fa-arrow-down mr-2"></i> Armar Pizza
+                       <i class="fas fa-arrow-down mr-2"></i> Armar Promo
                    </a>
                 </div>
             </div>
@@ -137,7 +137,7 @@
             <section class="mb-10 mt-6">
                 <h4 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3 border-b pb-2">
                     <span class="bg-gray-800 text-white w-8 h-8 flex items-center justify-center rounded-full text-sm">1</span>
-                    Elige el Tamaño
+                    Elige el Tamaño (Precio por 2 pizzas)
                 </h4>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-5" id="sizes-container">
@@ -169,7 +169,7 @@
             <section id="pizzas-section" class="disabled-section transition-all duration-500">
                 <h4 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3 border-b pb-2">
                     <span class="bg-gray-800 text-white w-8 h-8 flex items-center justify-center rounded-full text-sm">2</span>
-                    Escoge 2 Mitades
+                    Escoge tus 2 Pizzas
                     <span class="text-sm font-normal text-gray-500 ml-auto">(Toca para seleccionar)</span>
                 </h4>
 
@@ -507,7 +507,7 @@
             
             sizeLabel.textContent = `Promo ${state.activeSize.label}`;
 
-            // Renderizar slots (Mitad 1 / Mitad 2)
+            // Renderizar slots (Pizza 1 / Pizza 2)
             let slotsHtml = '';
             for (let i = 0; i < 2; i++) {
                 const pizza = state.selection[i];
@@ -520,7 +520,7 @@
                     slotsHtml += `
                         <div class="bg-gray-50 text-gray-400 border border-gray-300 border-dashed px-3 py-1.5 rounded-lg text-xs flex items-center gap-2">
                             <span class="w-4 h-4 rounded-full bg-gray-200 text-[10px] flex items-center justify-center">${i+1}</span>
-                            Selecciona Mitad ${i + 1}
+                            Selecciona Pizza ${i + 1}
                         </div>`;
                 }
             }
@@ -564,13 +564,13 @@
             const exists = state.selection.find(p => p.id === pizzaId);
 
             if (exists) {
-                // Opción: permitir deseleccionar
+                // Opción: permitir deseleccionar (opcional)
                 // state.selection = state.selection.filter(p => p.id !== pizzaId);
                 return; 
             }
 
             if (state.selection.length >= 2) {
-                showToast("⚠️ ¡Ya elegiste 2 mitades! Agrega al carrito.", "warning");
+                showToast("⚠️ ¡Ya elegiste tus 2 pizzas! Agrega al carrito.", "warning");
                 // Vibración en móviles si es posible
                 if(navigator.vibrate) navigator.vibrate(200);
                 return;
@@ -733,8 +733,8 @@
                                 ${item.name}
                             </div>
                             <div class="text-gray-600 text-xs font-medium mb-1 pl-2 border-l-2 border-red-200 space-y-1">
-                                <div><i class="fas fa-pizza-slice text-[8px] mr-1 text-red-400"></i> ½ ${item.pizzas[0].name}</div>
-                                <div><i class="fas fa-pizza-slice text-[8px] mr-1 text-red-400"></i> ½ ${item.pizzas[1].name}</div>
+                                <div><i class="fas fa-pizza-slice text-[8px] mr-1 text-red-400"></i> 1. ${item.pizzas[0].name}</div>
+                                <div><i class="fas fa-pizza-slice text-[8px] mr-1 text-red-400"></i> 2. ${item.pizzas[1].name}</div>
                             </div>
                         `;
                     } else if (item.type === 'package') {
@@ -858,8 +858,8 @@
                 msg += `\n*${idx + 1}. ${item.name.toUpperCase()}* ($${item.total})\n`;
                 
                 if (item.type === 'promo') {
-                    msg += `   ▪️ ½ ${item.pizzas[0].name}\n`;
-                    msg += `   ▪️ ½ ${item.pizzas[1].name}\n`;
+                    msg += `   ▪️ 1x ${item.pizzas[0].name}\n`;
+                    msg += `   ▪️ 1x ${item.pizzas[1].name}\n`;
                 } else if (item.type === 'package') {
                     msg += `   _(${item.desc})_\n`;
                 }
