@@ -292,6 +292,27 @@
                                 <i class="fas fa-check-circle"></i> Coordenadas GPS listas para enviar
                             </div>
                         </div>
+
+                        <!-- SECCIÓN DE PAGO NUEVA -->
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase ml-1">Método de Pago</label>
+                            <div class="relative">
+                                 <i class="fas fa-wallet absolute left-3 top-3.5 text-gray-400 z-10"></i>
+                                 <select id="payment-method" onchange="togglePaymentInfo()" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 pl-10 text-sm custom-input outline-none focus:bg-white appearance-none relative z-0">
+                                    <option value="efectivo">Efectivo (Contra Entrega)</option>
+                                    <option value="transferencia">Transferencia Bancaria</option>
+                                    <option value="terminal">Terminal (Solo en Sucursal)</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                    <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- Caja de Información Dinámica -->
+                            <div id="payment-info" class="mt-2 p-3 rounded-lg text-xs border transition-all duration-300">
+                                <!-- Se llena con JS -->
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -658,6 +679,31 @@
             }
         }
 
+        // --- FUNCIONES DE PAGO NUEVAS ---
+        function togglePaymentInfo() {
+            const method = document.getElementById('payment-method').value;
+            const info = document.getElementById('payment-info');
+            
+            if(method === 'efectivo') {
+                info.className = "mt-2 p-3 rounded-lg text-xs border bg-yellow-50 border-yellow-200 text-yellow-800 flex items-start gap-2";
+                info.innerHTML = '<i class="fas fa-exclamation-triangle mt-0.5"></i> <span>El repartidor no lleva más de $100 de cambio.</span>';
+            } else if(method === 'transferencia') {
+                info.className = "mt-2 p-3 rounded-lg text-xs border bg-blue-50 border-blue-200 text-blue-800";
+                info.innerHTML = `
+                    <div class="font-bold mb-1 flex items-center gap-2"><i class="fas fa-university"></i> Datos para Transferencia:</div>
+                    <p><strong>Banco:</strong> BBVA</p>
+                    <p><strong>Nombre:</strong> Ramy's Pizza S.A. de C.V.</p>
+                    <p><strong>Cuenta:</strong> 0123 4567 8901 2345</p>
+                    <div class="mt-2 pt-2 border-t border-blue-200 text-red-600 font-bold flex items-center gap-2">
+                        <i class="fas fa-camera"></i> Favor de enviar captura del pago
+                    </div>
+                `;
+            } else if(method === 'terminal') {
+                info.className = "mt-2 p-3 rounded-lg text-xs border bg-gray-100 border-gray-200 text-gray-600 flex items-start gap-2";
+                info.innerHTML = '<i class="fas fa-store mt-0.5"></i> <span>El pago con terminal es únicamente recogiendo en sucursal.</span>';
+            }
+        }
+
         // --- CARRITO Y CHECKOUT ---
         function toggleCart(forceOpen = null) {
             const modal = document.getElementById('cart-modal');
@@ -792,6 +838,8 @@
         function proceedToCheckout() {
             state.isCheckoutMode = true;
             renderCart();
+            // Inicializar info de pago
+            setTimeout(() => togglePaymentInfo(), 0);
         }
 
         function backToCart() {
@@ -832,6 +880,10 @@
             const name = document.getElementById('customer-name').value.trim();
             const phone = document.getElementById('customer-phone').value.trim();
             const address = document.getElementById('customer-address').value.trim();
+            
+            // Obtener metodo de pago
+            const paymentSelect = document.getElementById('payment-method');
+            const paymentMethodText = paymentSelect.options[paymentSelect.selectedIndex].text;
 
             if (!name || !phone || !address) {
                 showToast("Por favor completa todos los datos", "error");
@@ -866,7 +918,8 @@
             });
 
             msg += `\n--------------------------------\n`;
-            msg += `*💰 TOTAL A PAGAR: $${total}*`;
+            msg += `*💰 TOTAL A PAGAR: $${total}*\n`;
+            msg += `*💳 Método de Pago:* ${paymentMethodText}`;
 
             const url = `https://wa.me/${BUSINESS_PHONE}?text=${encodeURIComponent(msg)}`;
             window.open(url, '_blank');
