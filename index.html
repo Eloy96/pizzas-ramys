@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ramy's Pizza | Menú Digital</title>
+    <title>Pizzas Ruiz | Menú Digital</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -73,7 +73,7 @@
 
     <!-- Configuración del Negocio -->
     <script>
-        const BUSINESS_PHONE = "525512906477"; 
+        const BUSINESS_PHONE = "525558126941"; 
     </script>
 
     <!-- HEADER -->
@@ -85,8 +85,8 @@
                     <i class="fas fa-pizza-slice text-xl md:text-2xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl md:text-3xl font-bold uppercase tracking-wider leading-none text-shadow">Ramy's Pizza</h1>
-                    <p class="text-[10px] md:text-xs text-yellow-300 font-semibold tracking-widest uppercase">El Mirador</p>
+                    <h1 class="text-xl md:text-3xl font-bold uppercase tracking-wider leading-none text-shadow">Pizzas Ruiz</h1>
+                    <p class="text-[10px] md:text-xs text-yellow-300 font-semibold tracking-widest uppercase">Huixquilucan</p>
                 </div>
             </div>
             
@@ -119,8 +119,8 @@
             <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
             
             <div class="relative z-10">
-                <span class="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold uppercase tracking-widest mb-4 inline-block shadow">Oferta Especial</span>
-                <h2 class="text-4xl md:text-7xl font-bold text-yellow-400 mb-2 drop-shadow-[0_4px_4px_rgba(0,0,0,1)] font-oswald italic leading-tight">¡2x1 TODOS LOS DÍAS!</h2>
+                <span class="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold uppercase tracking-widest mb-4 inline-block shadow">Todos los Días</span>
+                <h2 class="text-4xl md:text-7xl font-bold text-yellow-400 mb-2 drop-shadow-[0_4px_4px_rgba(0,0,0,1)] font-oswald italic leading-tight">PROMOCIÓN 2x1</h2>
                 <p class="text-white text-base md:text-2xl font-medium drop-shadow-md max-w-2xl mx-auto leading-relaxed px-2">
                     Elige tu tamaño y llévate <span class="text-yellow-400 font-bold">2 pizzas enteras</span> por el precio de una.
                 </p>
@@ -145,7 +145,7 @@
                     Elige el Tamaño <span class="text-xs text-gray-500 font-normal ml-auto">(Precio por 2)</span>
                 </h4>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="sizes-container"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="sizes-container"></div>
             </section>
 
             <!-- PASO 2: PIZZAS -->
@@ -160,43 +160,43 @@
             </section>
         </div>
 
-        <!-- SECCIÓN 2: PAQUETES -->
-        <div class="bg-white p-4 md:p-8 rounded-3xl shadow-xl border border-gray-100 relative overflow-hidden">
-            <div class="absolute top-0 right-0 bg-yellow-400 text-red-900 font-bold px-10 py-1 transform rotate-45 translate-x-10 translate-y-5 shadow-sm z-10 text-[10px] md:text-xs tracking-widest uppercase">Ofertas</div>
-            <div class="flex items-center gap-3 mb-6">
-                <div class="bg-orange-100 text-orange-600 p-2 md:p-3 rounded-xl">
-                    <i class="fas fa-box-open text-xl md:text-2xl"></i>
-                </div>
-                <h3 class="text-2xl md:text-3xl font-bold text-gray-800 font-oswald uppercase">Paquetes</h3>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6" id="packages-container"></div>
-        </div>
-
-        <!-- SECCIÓN 3: EXTRAS -->
+        <!-- SECCIÓN 2: EXTRAS (Anteriormente Paquetes, ahora solo ingredientes) -->
         <div class="bg-white p-4 md:p-8 rounded-3xl shadow-xl border border-gray-100">
             <div class="flex items-center gap-3 mb-6">
                 <div class="bg-blue-100 text-blue-600 p-2 md:p-3 rounded-xl">
-                    <i class="fas fa-wine-bottle text-xl md:text-2xl"></i>
+                    <i class="fas fa-plus-circle text-xl md:text-2xl"></i>
                 </div>
-                <h3 class="text-2xl md:text-3xl font-bold text-gray-800 font-oswald uppercase">Bebidas y Extras</h3>
+                <h3 class="text-2xl md:text-3xl font-bold text-gray-800 font-oswald uppercase">Ingredientes Extras</h3>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="extras-container"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="extras-container"></div>
         </div>
 
-        <!-- INFO PAGOS -->
-        <div class="bg-gray-800 text-gray-300 p-6 rounded-2xl text-center text-sm space-y-3 border border-gray-700 mx-auto w-full">
-            <p><i class="fas fa-credit-card mr-2 text-yellow-400"></i> Pagos con Terminal son solamente en la sucursal</p>
-            <p><i class="fas fa-camera mr-2 text-yellow-400"></i> Pagos con transferencia: enviar captura de pantalla</p>
-            <p class="text-yellow-400 font-bold mt-2 pt-2 border-t border-gray-700 inline-block">
-                <i class="fas fa-exclamation-triangle mr-1"></i> El repartidor no lleva más de $100 de cambio
-            </p>
+        <!-- INFO PAGOS Y UBICACIÓN -->
+        <div class="bg-gray-900 text-gray-300 p-6 rounded-3xl text-center text-sm space-y-4 border border-gray-700 mx-auto w-full shadow-2xl">
+            <h4 class="text-yellow-400 font-bold text-lg uppercase font-oswald mb-2">Información Importante</h4>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left md:text-center">
+                <div class="space-y-2">
+                    <p><i class="fas fa-map-marker-alt mr-2 text-red-500"></i> Carretera Naucalpan-Huixquilucan, Barrio El Calvario, Magdalena Chichicaspa.</p>
+                    <p><i class="fas fa-clock mr-2 text-blue-400"></i> Lunes a Domingo: 1:00pm - 10:00pm</p>
+                </div>
+                <div class="space-y-2">
+                    <p><i class="fas fa-credit-card mr-2 text-yellow-400"></i> Aceptamos tarjetas (Visa, Mastercard)</p>
+                    <p><i class="fas fa-motorcycle mr-2 text-green-400"></i> Servicio a Domicilio Disponible</p>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 pt-4 mt-4 text-xs text-gray-500">
+                <p>* Los precios pueden estar sujetos a cambios.</p>
+                <p>* Pagos con transferencia requieren captura de pantalla.</p>
+            </div>
         </div>
 
     </main>
 
     <!-- FOOTER -->
     <footer class="bg-black text-gray-500 text-center py-8 text-xs w-full">
-        <p>&copy; 2024 Ramy's Pizza. Todos los derechos reservados.</p>
+        <p>&copy; 2024 Pizzas Ruiz. Todos los derechos reservados.</p>
     </footer>
 
     <!-- BARRA DE ESTADO FLOTANTE (BOTTOM BAR) -->
@@ -224,7 +224,11 @@
         <div class="relative max-w-2xl w-full animate-pop max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
             <button onclick="toggleMenuImage()" class="absolute -top-12 right-0 text-white text-3xl hover:text-red-400 font-bold bg-white/10 w-10 h-10 rounded-full flex items-center justify-center transition">&times;</button>
             <div class="bg-white p-2 rounded-lg shadow-2xl">
-                <img src="https://i.ibb.co/6yXH8qL/menu-ramy.jpg" onerror="this.src='https://images.unsplash.com/photo-1574126154517-d1e0d89e7344?auto=format&fit=crop&w=800&q=80'; this.parentElement.innerHTML += '<div class=\'text-center p-4 text-red-500\'>Imagen del menú no disponible, por favor usa el menú digital.</div>'" alt="Menú Ramy's Pizza" class="w-full h-auto rounded">
+                <!-- Placeholder image for menu -->
+                <div class="text-center p-10 bg-gray-100">
+                    <i class="fas fa-image text-4xl text-gray-400 mb-2"></i>
+                    <p class="text-gray-500">Imagen del menú digital</p>
+                </div>
             </div>
         </div>
     </div>
@@ -332,50 +336,36 @@
     <script>
         // --- DATOS DEL NEGOCIO ---
         const SIZES = [
-            { id: 'mediana', label: 'Mediana', slices: '8 rebanadas', price: 230, iconSize: 'text-3xl' },
-            { id: 'grande', label: 'Grande', slices: '12 rebanadas', price: 265, iconSize: 'text-4xl' },
-            { id: 'familiar', label: 'Familiar', slices: '16 rebanadas', price: 300, iconSize: 'text-5xl' },
+            { id: 'grande', label: 'Grande', slices: '2 Pizzas', price: 320, iconSize: 'text-4xl' },
+            { id: 'familiar', label: 'Familiar', slices: '2 Pizzas', price: 350, iconSize: 'text-5xl' },
         ];
 
         const TYPE_CLASSIC = "Clásica";
         const TYPE_SPECIAL = "Especialidad";
 
         const PIZZAS = [
-            { id: 1, name: "Hawaiana", ingredients: "Jamón y Piña.", img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&auto=format&fit=crop", type: TYPE_CLASSIC },
-            { id: 2, name: "Pepperoni", ingredients: "Doble Pepperoni.", img: "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=500&auto=format&fit=crop", type: TYPE_CLASSIC },
-            { id: 3, name: "Ramy's Especial", ingredients: "Pimiento, Cebolla, Champiñón, Atún, Mayonesa y Aguacate.", img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
-            { id: 4, name: "Sambar", ingredients: "Pierna, Pollo, Salchicha y Salsa Chipotle.", img: "https://images.unsplash.com/photo-1593560708920-63984dc36f3c?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
-            { id: 5, name: "Mexicana", ingredients: "Pierna, Pollo, Jalapeño y Aguacate.", img: "https://images.unsplash.com/photo-1620374645498-af620e40d44b?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
-            { id: 6, name: "Ranchera", ingredients: "Frijol, Champiñón, Chorizo, Jalapeño.", img: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
-            { id: 7, name: "Italiana", ingredients: "Carne Molida y Salchicha.", img: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=500&auto=format&fit=crop", type: TYPE_CLASSIC },
-            { id: 8, name: "Mirta", ingredients: "Pierna, Jamón, Pepperoni y Pimiento.", img: "https://images.unsplash.com/photo-1576458088443-04a19bb13da6?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
-            { id: 9, name: "Cubana", ingredients: "Pierna, Jamón, Jalapeño y Aguacate.", img: "https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
-            { id: 10, name: "Azteca", ingredients: "Frijol, Champiñón, Tocino, Cebolla.", img: "https://images.unsplash.com/photo-1574126154517-d1e0d89e7344?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
-            { id: 11, name: "Especial", ingredients: "Jamón, Piña, Pepperoni y Jalapeños.", img: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
-            { id: 12, name: "BBQ Pollo", ingredients: "Pechuga de Pollo en Salsa BBQ.", img: "https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
-            { id: 13, name: "Combinada", ingredients: "Jamón, Chorizo, Pimiento y Cebolla.", img: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=500&auto=format&fit=crop", type: TYPE_CLASSIC },
-            { id: 14, name: "Carnes Frías", ingredients: "Pierna, Salchicha, Chorizo, Jamón y Pepperoni.", img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
-            { id: 15, name: "Vegetariana", ingredients: "Champiñón, Cebolla, Pimiento y Aguacate.", img: "https://images.unsplash.com/photo-1511688878353-3a2f5be94c74?w=500&auto=format&fit=crop", type: TYPE_CLASSIC },
-            { id: 16, name: "Pastor", ingredients: "Carne al Pastor y Piña.", img: "https://images.unsplash.com/photo-1506354666786-959d6d497f1a?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
-            { id: 17, name: "Tres Quesos", ingredients: "Mezcla de Tres Quesos.", img: "https://images.unsplash.com/photo-1573821663912-569905455b1c?w=500&auto=format&fit=crop", type: TYPE_CLASSIC }
+            { id: 1, name: "Hawaiana", ingredients: "Jamón, Piña y Tocino.", img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&auto=format&fit=crop", type: TYPE_CLASSIC },
+            { id: 2, name: "La Trevi", ingredients: "Pierna, Pollo, Salchicha, Salsa Chipotle y Salsa.", img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 3, name: "Ruiz Esp", ingredients: "Champiñones, Atún, Mayonesa y Aguacate.", img: "https://images.unsplash.com/photo-1593560708920-63984dc36f3c?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 4, name: "Mexicana", ingredients: "Pierna, Pollo, Jalapeños y Aguacate.", img: "https://images.unsplash.com/photo-1620374645498-af620e40d44b?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 5, name: "Hawaiana Internacional", ingredients: "Jamón, Piña y Cerezas.", img: "https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 6, name: "Vegetariana", ingredients: "Champiñón, Cebolla, P. Verde, Aceitunas y Aguacate.", img: "https://images.unsplash.com/photo-1511688878353-3a2f5be94c74?w=500&auto=format&fit=crop", type: TYPE_CLASSIC },
+            { id: 7, name: "Mixta", ingredients: "Pierna, Jamón, Salami, Pepperoni y P. Verde.", img: "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 8, name: "Barbi", ingredients: "Champiñón, Pepperoni y Jalapeño.", img: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 9, name: "Cubana", ingredients: "Pierna, Jamón, Jalapeños, Jitomate y Aguacate.", img: "https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 10, name: "Ranchera", ingredients: "Frijoles, Champiñón, Jalapeños, Chorizo, Tocino y Aguacate.", img: "https://images.unsplash.com/photo-1574126154517-d1e0d89e7344?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 11, name: "Combinada", ingredients: "Jamón, Salami, Chorizo, P. Verde y Cebolla.", img: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=500&auto=format&fit=crop", type: TYPE_CLASSIC },
+            { id: 12, name: "Al Pastor", ingredients: "Carne al Pastor y Piña.", img: "https://images.unsplash.com/photo-1506354666786-959d6d497f1a?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 13, name: "Carnes Frías", ingredients: "Pierna, Salchicha, Pepperoni, Chorizo.", img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
+            { id: 14, name: "Especial", ingredients: "Jamón, Piña, Pepperoni y Jalapeños.", img: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?w=500&auto=format&fit=crop", type: TYPE_SPECIAL },
         ];
 
-        const PACKAGES = [
-            { id: 'p1', name: "Paquete 1", desc: "3 Pizzas Familiares Hawaianas + 1 Refresco 2 Lts.", price: 415, icon: 'fas fa-users' },
-            { id: 'p2', name: "Paquete 2", desc: "3 Pizzas Grandes Hawaianas + 1 Refresco 2 Lts.", price: 355, icon: 'fas fa-user-friends' },
-            { id: 'p3', name: "Paquete 3", desc: "1 Pizza Familiar Orilla Queso (Espec.) + Refresco 2 Lts.", price: 220, icon: 'fas fa-star' },
-            { id: 'p4', name: "Paquete 4", desc: "2 Pizzas Familiares Hawaianas + 1 Refresco 2 Lts.", price: 290, icon: 'fas fa-user-plus' },
-            { id: 'p5', name: "Paquete 5", desc: "2 Pizzas Grandes Hawaianas + 1 Refresco 2 Lts.", price: 250, icon: 'fas fa-pizza-slice' },
-            { id: 'promo', name: "Promo Mostrador", desc: "1 Pizza Grande (Hawaiana o Pepperoni). *Solo Recoger", price: 120, icon: 'fas fa-store' }
-        ];
+        // Se eliminaron los paquetes antiguos
+        const PACKAGES = []; 
 
         const EXTRAS = [
-            { id: 'refresco', name: "Refresco 2 Lts", desc: "Coca-Cola family products", price: 20, icon: 'fas fa-bottle-water' },
-            { id: 'spaghetti-jamon', name: "Spaghetti Jamón", desc: "Porción individual", price: 65, icon: 'fas fa-utensils' },
-            { id: 'spaghetti-champ', name: "Spaghetti Champiñones", desc: "Porción individual", price: 65, icon: 'fas fa-utensils' },
-            { id: 'spaghetti-bol', name: "Spaghetti Boloñesa", desc: "Con Jamón y Boloñesa", price: 65, icon: 'fas fa-utensils' },
-            { id: 'antipasto', name: "Antipasto", desc: "Con Champiñones", price: 65, icon: 'fas fa-leaf' },
-            { id: 'ingrediente', name: "Ingrediente Extra", desc: "Añadir a una pizza", price: 15, icon: 'fas fa-plus' },
+            { id: 'ingrediente-grande', name: "Ingrediente Extra (Grande)", desc: "Para pizza grande", price: 15, icon: 'fas fa-plus' },
+            { id: 'ingrediente-familiar', name: "Ingrediente Extra (Familiar)", desc: "Para pizza familiar", price: 25, icon: 'fas fa-plus' },
         ];
 
         // --- ESTADO DE LA APLICACIÓN ---
@@ -391,7 +381,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderSizes();
             renderPizzas();
-            renderPackages();
+            // renderPackages(); // Oculto ya que no hay paquetes
             renderExtras();
             renderCart();
         });
@@ -452,36 +442,13 @@
 
                     <!-- Info -->
                     <div class="p-3 md:p-4">
-                        <p class="text-[10px] md:text-xs text-gray-600 leading-snug h-8 overflow-hidden">${pizza.ingredients}</p>
+                        <p class="text-[10px] md:text-xs text-gray-600 leading-snug h-10 overflow-hidden">${pizza.ingredients}</p>
                         <div class="mt-2 text-right">
                             <span class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase">Click para añadir</span>
                         </div>
                     </div>
                 </div>
             `}).join('');
-        }
-
-        function renderPackages() {
-            const container = document.getElementById('packages-container');
-            container.innerHTML = PACKAGES.map(pkg => `
-                <div class="flex flex-col sm:flex-row bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group">
-                    <div class="bg-yellow-400 w-full sm:w-28 flex items-center justify-center p-3 md:p-4 text-red-800 group-hover:bg-yellow-500 transition">
-                        <i class="${pkg.icon} text-3xl md:text-4xl"></i>
-                    </div>
-                    <div class="p-3 md:p-4 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h4 class="font-bold text-gray-800 text-base md:text-lg font-oswald uppercase">${pkg.name}</h4>
-                            <p class="text-xs text-gray-600 mb-2 leading-relaxed">${pkg.desc}</p>
-                        </div>
-                        <div class="flex justify-between items-center mt-2 border-t pt-2 border-dashed border-gray-200">
-                            <span class="text-xl md:text-2xl font-bold text-red-600 font-oswald">$${pkg.price}</span>
-                            <button onclick="addPackageToCart('${pkg.id}')" class="bg-red-600 text-white text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-red-700 transition shadow-md active:scale-95">
-                                <i class="fas fa-plus mr-1"></i> AGREGAR
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
         }
 
         function renderExtras() {
@@ -494,6 +461,7 @@
                         </div>
                         <div>
                             <h5 class="font-bold text-gray-800 text-xs md:text-sm leading-tight">${extra.name}</h5>
+                            <p class="text-[10px] text-gray-500">${extra.desc}</p>
                             <div class="text-red-600 font-bold text-xs md:text-sm">$${extra.price}</div>
                         </div>
                     </div>
@@ -623,23 +591,7 @@
             toggleCart(true); 
         }
 
-        function addPackageToCart(pkgId) {
-            const pkg = PACKAGES.find(p => p.id === pkgId);
-            if (!pkg) return;
-
-            const item = {
-                id: Date.now(),
-                type: 'package',
-                name: pkg.name,
-                desc: pkg.desc,
-                total: pkg.price
-            };
-            
-            state.cart.push(item);
-            renderCart();
-            showToast(`✅ ${pkg.name} agregado`);
-            toggleCart(true);
-        }
+        // Se eliminó la función addPackageToCart porque ya no hay paquetes
 
         function addExtraToCart(extraId) {
             const extra = EXTRAS.find(e => e.id === extraId);
@@ -680,7 +632,7 @@
                 info.innerHTML = `
                     <div class="font-bold mb-1 flex items-center gap-2"><i class="fas fa-university"></i> Datos para Transferencia:</div>
                     <p><strong>Banco:</strong> BBVA</p>
-                    <p><strong>Nombre:</strong> Ramy's Pizza S.A. de C.V.</p>
+                    <p><strong>Nombre:</strong> Pizzas Ruiz</p>
                     <p><strong>Cuenta:</strong> 0123 4567 8901 2345</p>
                     <div class="mt-2 pt-2 border-t border-blue-200 text-red-600 font-bold flex items-center gap-2">
                         <i class="fas fa-camera"></i> Favor de enviar captura del pago
@@ -775,22 +727,22 @@
                                 <div><i class="fas fa-pizza-slice text-[8px] mr-1 text-red-400"></i> 2. ${item.pizzas[1].name}</div>
                             </div>
                         `;
-                    } else if (item.type === 'package') {
-                        iconHtml = '<div class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0"><i class="fas fa-box"></i></div>';
-                        contentHtml = `
-                            <div class="font-bold text-gray-800 text-xs md:text-sm mb-1">${item.name}</div>
-                            <div class="text-gray-500 text-[10px] md:text-xs italic">${item.desc}</div>
-                        `;
-                    } else {
+                    } else if (item.type === 'extra') {
                          iconHtml = '<div class="bg-green-100 text-green-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0"><i class="fas fa-plus"></i></div>';
                         contentHtml = `
                             <div class="font-bold text-gray-800 text-xs md:text-sm mb-1">${item.name}</div>
                             <div class="text-gray-500 text-[10px] md:text-xs">${item.desc || ''}</div>
                         `;
+                    } else {
+                         // Fallback por si acaso
+                         iconHtml = '<div class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0"><i class="fas fa-pizza-slice"></i></div>';
+                        contentHtml = `
+                            <div class="font-bold text-gray-800 text-xs md:text-sm mb-1">${item.name}</div>
+                        `;
                     }
 
                     return `
-                    <div class="bg-white border border-gray-100 rounded-xl p-3 relative flex gap-3 animate-pop shadow-sm items-start">
+                    <div class="bg-white border border-gray-100 rounded-xl p-3 mb-3 relative flex gap-3 animate-pop shadow-sm items-start">
                         <div class="mt-1">${iconHtml}</div>
                         <div class="flex-1">
                             ${contentHtml}
@@ -882,7 +834,7 @@
 
             const total = state.cart.reduce((sum, item) => sum + item.total, 0);
             
-            let msg = `*¡HOLA! QUIERO REALIZAR UN PEDIDO EN RAMY'S PIZZA 🍕*\n\n`;
+            let msg = `*¡HOLA! QUIERO REALIZAR UN PEDIDO EN PIZZAS RUIZ 🍕*\n\n`;
             msg += `*👤 Cliente:* ${name}\n`;
             msg += `*📞 Tel:* ${phone}\n`;
             
@@ -902,7 +854,7 @@
                 if (item.type === 'promo') {
                     msg += `   ▪️ 1x ${item.pizzas[0].name}\n`;
                     msg += `   ▪️ 1x ${item.pizzas[1].name}\n`;
-                } else if (item.type === 'package') {
+                } else if (item.type === 'extra') {
                     msg += `   _(${item.desc})_\n`;
                 }
             });
